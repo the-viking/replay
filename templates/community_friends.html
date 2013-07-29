@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title> Community </title>
+<link href="{{ STATIC_URL }}css/style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div id=container>
+<a href="{% url 'views.home' %}">
+<div id=logo> <img src="{{ STATIC_URL }}images/logo.gif" width="213" height="77" />
+</div>
+</a>
+<a href="{% url 'views.logout_user' %}"><p id=logout>Log Out</p></a>
+<p id="account">Account</p>
+<ul>
+<li class="outer" style="background-color:#66CCFF;">Community</li>
+
+<a href="{% url 'views.home' %}">
+<li class="outer"id=items>Items</li></a>
+</ul>
+<div id=center>
+<div id=sidemenu>
+<p>Friends</p>
+<ul>
+<li class="inner">Ask</li>
+<li class="inner" id="sidesel">Friends</li>
+</ul>
+</div>
+
+<div id=list>
+{% for item in items %}
+<a href="{% url 'views.item' item.id %}">
+<div class="item">
+<img src="{{ item.image }}" width="110" height="110">
+{{ item.name|truncatechars:12 }}
+</div>
+</a>
+{% endfor %}
+
+</div>
+<div id=empty>
+</div>
+</div>
+
+
+<!-- FACEBOOK LIKE BOX CSS POPUP WIDGET -->
+<style type="text/css">
+* html #tpfanbox{position:absolute}
+#tpfanbox{top:0px;left:0px;width:100%;height:100%;margin:0;overflow-y:auto; z-index:9999}
+#tpfanboxx{background-color:#fff; overflow:none}
+.tpfanboxx{width:320px;height:380px;position:fixed;top:45%;left:50%;margin-top:-200px; margin-left:-200px;border:7px solid #6D85B5;padding:20px;z-index:9999}
+.tptitle{background:#3B5999;color:#fff;font-size:16px !important;font-weight:bold;margin:5px 0;border-left:20px solid #6D85B5;padding:10px;line-height:25px;font-family:Arial !important; float:left;z-index:9999}
+</style>
+
+<div id="tpfanbox">
+<div id="tpfanboxx" class="tpfanboxx">
+<br/>
+<center style="float:left; margin-left:10px;cursor:pointer;"><a style=" font-size:xx-small; color:#3B78CD; text-decoration:none;" onmouseup="document.getElementById('tpfanbox').style.display='none'">[X] CLOSE</a></center>
+
+</div></div>
+
+
+<script>
+
+document.getElementById('tpfanbox').style.display='none';
+
+</script>
+<!-- FACEBOOK LIKE BOX CSS POPUP WIDGET -->
+
+
+
+<ul id=foot>
+<li style="width:7em;" class="bottom">About us</li>
+<li class="bottom">Contact</li>
+</ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+{% if yours %}
+<title>My Page </title>
+{% else %}
+<title>{{ user.username }}'s Page</title>
+{% endif %}
+<link href="{{ STATIC_URL }}css/style.css" rel="stylesheet" type="text/css" />
+</head>
+
+
+
+<body>
+<div id=container>
+<a href="{% url 'views.home' %}">
+<div id=logo>
+<img src="{{ STATIC_URL }}images/logo.gif" width="213" height="77" />
+</div>
+</a>
+<a href="{% url 'views.logout_user' %}"><p id=logout>Log Out</p></a>
+<p id="account">Account</p>
+<ul>
+<a href="{% url 'views.community' %}">
+<li class="outer">Community</li></a>
+<li class="outer"id="items" style="background-color:#66CCFF;">Items</li>
+</ul>
+<div id=center>
+<div id=sidemenu>
+<p>Items
+</p>
+<ul>
+<a href="{% url 'views.home' %}"><li class="inner">All Items</li></a>
+<li class="inner" id="sidesel">MyPage</li>
+
+
+<a href="{% url 'views.add' %}"><li class="inner">Add</li></a>
+
+
+
+</ul>
+</div>
+
+<div id="list">
+
+{% for item in items %}
+<a href="{% url 'views.item' item.id %}">
+<div class="item">
+<img src="{{ MEDIA_URL }}{{ item.image }}" width="110" height="110">
+
+{{ item.name|truncatechars:12 }}
+</div>
+</a>
+{% endfor %}
+</div>
+<div id=empty>
+</div>
+</div>
+
+
+<ul id=foot>
+<li style="width:7em;" class="bottom">About us</li>
+<li class="bottom">Contact</li>
+</ul>
+</div>
+</body>
+</html>

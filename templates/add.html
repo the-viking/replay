@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Re:Play</title>
+<link href="{{ STATIC_URL }}css/style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div id=container>
+<a href="{% url 'views.home' %}">
+<div id=logo>
+<img src="{{ STATIC_URL }}images/logo.gif" width="213" height="77" />
+</div>
+</a>
+<a href="{% url 'views.logout_user' %}"><p id=logout>Log Out</p></a>
+<p id="account">Account</p>
+<ul>
+<a href="{% url 'views.community' %}">
+<li class="outer">Community</li></a>
+<li class="outer"id=items style="background-color:#66CCFF;">Items</li>
+</ul>
+<div id=center>
+<div id=sidemenu>
+<p>Items
+</p>
+<ul>
+<a href="{% url 'views.home' %}"><li class="inner">All Items</li></a>
+<a href="{% url 'views.user' uid %}"><li class="inner">MyPage</li></a>
+<a href="{% url 'views.add' %}"><li class="inner" id="sidesel">Add</li></a>
+</ul>
+</div>
+		<div>
+			{% if form %}
+			<form action="" method="post" enctype="multipart/form-data" id="main"
+>
+				{% csrf_token %}
+                <p style="position:absolute; font-size:24px;">Name:</p> 
+                 <fieldset id="addnamef">   
+				<input type="text" name="name" value="{{ name }}" id="addname"/>
+</fieldset><br/>
+
+<div id="addimage">
+  <img src="../static/images/empty.gif" width="170" height="170" /></div><br/>
+  	<input type="file" name="image" id="addurl"/><br/>
+
+
+ <fieldset id="adddescf">      
+				<p style="position:fixed; font-size:24px; margin-top:0;">Description: </p>
+               <textarea id="id_desc" name="desc" value="{{desc}}"  
+               style="position:absolute;
+color:#999999;
+background-color:transparent;
+font-size:20px;
+left:0;
+top:-22px;
+height:100%;
+right:-70px;
+width:100%;
+padding-top:35px;
+border:none;
+overflow:auto;"></textarea>
+                  </fieldset>
+				<br/>
+			
+				<input type="submit" value="Submit" class="inner" id="addsubmit">
+			<form/>
+</div>
+{% endif %}
+			{% if errors %}
+			<ul>
+				{% for error in errors %}
+				<li> {{ error }} </li>
+				{% endfor %}
+			</ul>
+
+			{% endif %}
+            {% if not form and not errors %}
+            <div id="main">
+				<p style="width:70%; margin-left:60px; font-size:26px;"> <a href="{% url 'views.item' id %}">Item {{ id }}</a> added succesfully  {{ msg }}</p>
+                </div>
+			{% endif %}
+            <div id=empty>
+</div>
+
+</div>
+
+
+
+<ul id=foot>
+<li style="width:7em;" class="bottom">About us</li>
+<li class="bottom">Contact</li>
+</ul>
+		</div>
+	</body>
+</html>
+
+
+
+
+
+
+
+
+	
+		
+                
+
+
+
+
+
+                 
+                 
+       
+
+
+                        
+
+
+
+
+
+ 
