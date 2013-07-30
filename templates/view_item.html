@@ -13,18 +13,18 @@
 </div>
 </a>
 <a href="{% url 'views.logout_user' %}"><p id=logout>Log Out</p></a>
-<p id="account">Account</p>
+<a href="{% url 'views.account' %}"><p id="account">Account</p></a>
 <ul>
 <a href="{% url 'views.community' %}">
 <li class="outer">Community</li></a>
-<li class="outer"id=items style="background-color:#66CCFF;">Items</li>
+<a href="{% url 'views.home' %}"><li class="outer"id=items style="background-color:#66CCFF;">Items</li></a>
 </ul>
 <div id=center>
 <div id=sidemenu>
 <p>Items
 </p>
 <ul>
-<li class="inner" id="sidesel">Items</li>
+<a href="{% url 'views.home' %}"><li class="inner" id="sidesel">Items</li></a>
 
 <a onmouseup="document.getElementById('tpfanbox').style.display='block'"><li class="inner"><center style="float:left;cursor:pointer;">&nbsp;&nbsp;Contact</center></li></a>
 
@@ -35,38 +35,92 @@
 </div>
 
 
-<div id="main">
+{% if errors %}
+<ul>
+    {% for error in errors %}
+    <li> {{ error }} </li>
+    {% endfor %}
+{% endif %}
+</ul>
 {% if item %}
+{% if edited and not errors %}
+            <div id="main">
+				<p style="width:70%; margin-left:60px; font-size:26px;"> <a href="{% url 'views.item' item.id %}">Item {{ item.id }}</a> edited succesfully!</p>
+                <img src="{{ STATIC_URL}}images/snakeitem.gif" style="margin-left:100px;" width="300px" height="auto" />
+                </div>
+                
+{% else %}
+
+{% if edit and yours %}
+<div>
+<form action="" method="post" enctype="multipart/form-data" id="main">
+				{% csrf_token %}
+                <p style="position:absolute; font-size:24px;">Name:</p> 
+                 <fieldset id="addnamef">   
+				<input type="text" name="name" value="{{ item.name }}" id="addname"/>
+</fieldset><br/>
+
+<div id="addimage">
+  <img src="{{ MEDIA_URL }}{{ item.image|default:"media/empty.gif"}}" width="170" height="170" /></div><br/>
+  	<input type="file" name="image" id="addurl"/><br/>
+
+
+ <fieldset id="adddescf">      
+				<p style="position:fixed; font-size:24px; margin-top:0;">Description: </p>
+               <textarea id="id_desc" name="desc" 
+               style="position:absolute;
+color:#999999;
+background-color:transparent;
+font-size:20px;
+left:0;
+top:-22px;
+height:100%;
+right:-70px;
+width:100%;
+padding-top:35px;
+border:none;
+overflow:auto;">
+{{ item.description }}
+</textarea>
+                  </fieldset>
+				<br/>
+			
+				<input type="submit" value="Submit" class="inner" id="addsubmit">
+			<form/>
+</div>
+{% else %}
+<div id="main">
 		<div id="viewname">A {{ item.name }} </div>
                     
-
 <div id="viewimage">
   <img src="{{ MEDIA_URL }}{{ item.image }}" width="200" height="200" /></div>
-  
-		
 		<div id="viewdesc"> {{ item.description }} 
 
 {% if sent %}
 <p>{{ owner }} notified succesfully!</p>
-{% elif sent == False %}
-<p> Notification failed. </p>
 {% endif %}
 
 </div>
 
-<div id="viewowner"> {{ owner.first_name }}'s Item 
+<div id="viewowner"> 
+{% if yours %}
+Your
+{% else %}
+{{ owner.first_name }}'s 
+{% endif %}
+Item 
 </div>
 
 
 {% if yours %}
 
 <ul>
-<a href="items_edit.html">
+<a href="{% url 'views.edit' item.id %}">
 <li class="inner" id="viewedit">
 Edit
 </li>
 </a>
-<a href="{% url 'views.deleted' item.id %}">
+<a href="{% url 'views.delete' item.id %}">
 <li class="inner" id="viewdelete">
 Delete
 </li>
@@ -82,7 +136,7 @@ Contact
 </li></center>
 </a>
 
-<a href="notify">
+<a href="{% url 'views.notify' item.id %}">
 <li class="inner" id="viewnotify">
 Notify
 </li>
@@ -90,14 +144,17 @@ Notify
 </ul>
 
 {% endif %}
+{% endif %}
 
 
-{% else %}
 
-<p style="width:70%; margin-left:60px; font-size:26px;">The item you chose does not exist. </p>
 
 {% endif %}
 
+{% else %}
+<p style="font-size:26px; margin-left:40%;margin-right:60%;">The item you chose does not exist. </p>
+ <img src="{{ STATIC_URL}}images/sadsnake.gif" style="margin-left:220px;" width="300px" height="auto" />
+{% endif %}
 </div>
 
 <div id=empty>

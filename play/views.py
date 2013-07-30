@@ -66,13 +66,28 @@ def edit(request, id):
         return HttpResponseRedirect(URL)
     else:
         item = get_item(id)
+        errors = []
+        edited = False
+        edit = True
         if item:
             owner= User.objects.get(id=item.offered_by.id)
             yours = request.user == owner
+            if request.method == 'POST':
+                item.name = request.POST['name']
+                item.description = request.POST['desc']
+                if 'image' in request.FILES:
+                    file = request.FILES['image']
+                    errors = errors + invalid(file)
+                    if not errors:
+                        item.image = file
+                item.save()
+                edited = True
+                edit = False
         else:
             owner = False
             yours = False
-        return render(request, 'view_item.html', { 'edit' : True, 'owner' : owner, 'item' : item, 'yours' : yours })
+
+        return render(request, 'view_item.html', { 'edit' : edit, 'owner' : owner, 'item' : item, 'yours' : yours, 'errors' : errors, 'edited' : edited })
 
 def notify(request, id):
     if not request.user.is_authenticated():
@@ -101,7 +116,7 @@ def delete(request, id):
             if request.user == item.offered_by:
                 Item.delete(item)
                 msg = item.name + " deleted succesfully!"
-    return render(request, 'items_mypage.html', { 'msg' : msg })
+    return render(request, 'items_mypage.html', { 'msg' : msg, 'deleted' : True })
 
 def user(request, num): 
     if not request.user.is_authenticated():
@@ -126,6 +141,16 @@ def user(request, num):
             return render(request, 'items_mypage.html', { 'user' : user, 'items' : items })
 
 
+# helper function for image handling views to check file type and size
+def invalid(file):
+    errors = []
+    file_type = file.content_type.split('/')[0]
+    if file_type not in settings.TASK_UPLOAD_FILE_TYPES:
+        errors.append('File type is not supported.')
+    if file._size > settings.TASK_UPLOAD_FILE_MAX_SIZE:
+        errors.append('Your image is too big.')
+    return errors
+
 def add(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect(URL)
@@ -136,6 +161,7 @@ def add(request):
         msg = ''
         desc = False
         name = False
+        file = False
         if request.method == 'POST':
             if not request.POST.get('name', ''):
                 errors.append('Enter a name.')
@@ -149,7 +175,7 @@ def add(request):
                 errors.append('Please submit an image')
             else:
                 file = request.FILES['image']
-                errors = errors + invalid(file)  
+                errors = errors + invalid(file)
             if not errors:
                 item = Item(name=name, description=desc, offered_by = request.user, image=file )
                 item.save()
@@ -157,15 +183,6 @@ def add(request):
             form = bool(errors)
         return render(request, 'add.html', { 'item' : item, 'uid' : request.user.id, 'errors' : errors, 'form' : form, 'msg' : msg, 'desc':desc, 'name':name})
 
-# helper function for image handling views to check file type and size
-def invalid(file):
-    errors = []
-    file_type = file.content_type.split('/')[0]
-    if file_type not in settings.TASK_UPLOAD_FILE_TYPES:
-        errors.append('File type is not supported.')
-    if file._size > settings.TASK_UPLOAD_FILE_MAX_SIZE:
-        errors.append('Your image is too big.')
-    return errors
 
 def all_items(request):
     if not request.user.is_authenticated():
@@ -182,16 +199,39 @@ def account(request):
         return HttpResponseRedirect(URL)
     else:
         user = request.user
+        errors = []
+        changed = False
         if request.method == 'POST':
             profile = user.profile
-            if 'image' in reqest.FILES:
+            if 'image' in request.FILES:
                 image = request.FILES['image']
-                errors = invalid(image)
+                errors = errors + invalid(image)
                 if not errors: 
                     profile.picture = image
-            user.save()
-            profile.save()
-        return render(request, 'accounts.html', {'user' : user} )
+            if request.POST.get('name', ''):
+                user.username = request.POST['name']
+            if request.POST.get('phone', ''):
+                profile.telephone = request.POST['phone']
+            if request.POST.get('email', ''):
+                user.email = request.POST['email']
+            if request.POST.get('firstname', ''):
+                user.first_name = request.POST['firstname']
+            if request.POST.get('lastname', ''):
+                user.last_name = request.POST['lastname']
+            if request.POST.get('address', ''):
+                profile.address = request.POST['address']
+            if request.POST.get('pwd', ''):
+                pwd = request.POST['pwd']
+                if request.POST.get('pwd_conf', ''):
+                    if pwd == request.POST['pwd_conf']:
+                        user.password = pwd
+                    else:
+                        errors.append('Enter your new password again in confirmation password')
+            if not errors:
+                user.save()
+                profile.save()
+                changed = True
+        return render(request, 'accounts.html', {'user' : user, 'errors' : errors, 'changed' : changed} )
 
 def community(request):
     if not request.user.is_authenticated():

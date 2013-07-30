@@ -14,11 +14,12 @@
 </div>
 </a>
 <a href="{% url 'views.logout_user' %}"><p id=logout>Log Out</p></a>
-<p id="account">Account</p>
+<a href="{% url 'views.account' %}"><p id="account">Account</p></a>
 <ul>
 <a href="{% url 'views.community' %}">
 <li class="outer">Community</li></a>
-<li class="outer"id=items style="background-color:#66CCFF;">Items</li>
+<a href="{% url 'views.home' %}">
+<li class="outer"id=items style="background-color:#66CCFF;">Items</li></a>
 </ul>
 <div id=center>
 <div id=sidemenu>
@@ -32,22 +33,22 @@
 </div>
 		<div>
 			{% if form %}
-			<form action="" method="post" enctype="multipart/form-data" id="main"
+			<form id="form" action="" method="post" enctype="multipart/form-data" id="main"
 >
 				{% csrf_token %}
                 <p style="position:absolute; font-size:24px;">Name:</p> 
                  <fieldset id="addnamef">   
-				<input type="text" name="name" value="{{ name }}" id="addname"/>
+				<input type="text" name="name" {% if name %}value="{{ name }}"{% endif %} id="addname"/>
 </fieldset><br/>
 
 <div id="addimage">
-  <img src="../static/images/empty.gif" width="170" height="170" /></div><br/>
+  <img src="{{ MEDIA_URL }}media/empty.gif" width="170" height="170" /></div><br/>
   	<input type="file" name="image" id="addurl"/><br/>
 
 
  <fieldset id="adddescf">      
 				<p style="position:fixed; font-size:24px; margin-top:0;">Description: </p>
-               <textarea id="id_desc" name="desc" value="{{desc}}"  
+               <textarea id="id_desc" name="desc"  
                style="position:absolute;
 color:#999999;
 background-color:transparent;
@@ -59,25 +60,29 @@ right:-70px;
 width:100%;
 padding-top:35px;
 border:none;
-overflow:auto;"></textarea>
+overflow:auto;">{% if desc %}{{ desc }}{% endif %}</textarea>
                   </fieldset>
 				<br/>
-			
 				<input type="submit" value="Submit" class="inner" id="addsubmit">
 			<form/>
 </div>
 {% endif %}
 			{% if errors %}
-			<ul>
+			<ul style="margin-top:-98px; color:red; text-align:center;">
 				{% for error in errors %}
 				<li> {{ error }} </li>
 				{% endfor %}
 			</ul>
 
 			{% endif %}
+            {% if msg %}
+            <p> {{ msg }} </p>
+            {% endif %}
             {% if not form and not errors %}
             <div id="main">
-				<p style="width:70%; margin-left:60px; font-size:26px;"> <a href="{% url 'views.item' id %}">Item {{ id }}</a> added succesfully  {{ msg }}</p>
+				<p style="width:70%; margin-left:60px; font-size:26px;"> <a href="{% url 'views.item' item.id %}">Item {{ item.id }}</a> added succesfully  {{ msg }}</p>
+                <img src="{{ STATIC_URL}}images/snakeitem.gif" style="margin-left:100px;" width="300px" height="auto" />
+                </div>
                 </div>
 			{% endif %}
             <div id=empty>

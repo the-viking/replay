@@ -15,19 +15,20 @@
 </a>
 
 <a href="{% url 'views.logout_user' %}"><p>Log Out</p></a>
-<p id="account">Account</p>
+<a href="{% url 'views.account' %}"><p id="account">Account</p></a>
 
 <ul>
 <a href="{% url 'views.community' %}">
 <li class="outer">Community</li></a>
-<li class="outer"id=items style="background-color:#66CCFF;">Items</li>
+<a href="{% url 'views.home' %}">
+<li class="outer"id=items style="background-color:#66CCFF;">Items</li></a>
 </ul>
 <div id=center>
 <div id=sidemenu>
 <p>Items
 </p>
 <ul>
-<li class="inner" id="sidesel">All Items</li>
+<a href="{% url 'views.home' %}"><li class="inner" id="sidesel">All Items</li></a>
 <a href="{% url 'views.user' id %}"><li class="inner">MyPage</li></a>
 <a href="{% url 'views.add'%}"><li class="inner">Add</li></a>
 </ul>

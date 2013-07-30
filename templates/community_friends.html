@@ -13,9 +13,10 @@
 </div>
 </a>
 <a href="{% url 'views.logout_user' %}"><p id=logout>Log Out</p></a>
-<p id="account">Account</p>
+<a href="{% url 'views.account' %}"><p id="account">Account</p></a>
 <ul>
-<li class="outer" style="background-color:#66CCFF;">Community</li>
+<a href="{% url 'views.community' %}">
+<li class="outer" style="background-color:#66CCFF;">Community</li></a>
 
 <a href="{% url 'views.home' %}">
 <li class="outer"id=items>Items</li></a>
@@ -30,11 +31,11 @@
 </div>
 
 <div id=list>
-{% for item in items %}
-<a href="{% url 'views.item' item.id %}">
+{% for user in users %}
+<a href="{% url 'views.user' user.id %}">
 <div class="item">
-<img src="{{ item.image }}" width="110" height="110">
-{{ item.name|truncatechars:12 }}
+<img src="{{ MEDIA_URL }}{{ user.profile.picture|default:'empty.gif' }}" width="110" height="110">
+{{ user.first_name|truncatechars:12 }}
 </div>
 </a>
 {% endfor %}
@@ -43,31 +44,6 @@
 <div id=empty>
 </div>
 </div>
-
-
-<!-- FACEBOOK LIKE BOX CSS POPUP WIDGET -->
-<style type="text/css">
-* html #tpfanbox{position:absolute}
-#tpfanbox{top:0px;left:0px;width:100%;height:100%;margin:0;overflow-y:auto; z-index:9999}
-#tpfanboxx{background-color:#fff; overflow:none}
-.tpfanboxx{width:320px;height:380px;position:fixed;top:45%;left:50%;margin-top:-200px; margin-left:-200px;border:7px solid #6D85B5;padding:20px;z-index:9999}
-.tptitle{background:#3B5999;color:#fff;font-size:16px !important;font-weight:bold;margin:5px 0;border-left:20px solid #6D85B5;padding:10px;line-height:25px;font-family:Arial !important; float:left;z-index:9999}
-</style>
-
-<div id="tpfanbox">
-<div id="tpfanboxx" class="tpfanboxx">
-<br/>
-<center style="float:left; margin-left:10px;cursor:pointer;"><a style=" font-size:xx-small; color:#3B78CD; text-decoration:none;" onmouseup="document.getElementById('tpfanbox').style.display='none'">[X] CLOSE</a></center>
-
-</div></div>
-
-
-<script>
-
-document.getElementById('tpfanbox').style.display='none';
-
-</script>
-<!-- FACEBOOK LIKE BOX CSS POPUP WIDGET -->
 
 
 

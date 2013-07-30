@@ -2,11 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-{% if yours %}
 <title>My Page </title>
-{% else %}
-<title>{{ user.username }}'s Page</title>
-{% endif %}
 <link href="{{ STATIC_URL }}css/style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -20,11 +16,12 @@
 </div>
 </a>
 <a href="{% url 'views.logout_user' %}"><p id=logout>Log Out</p></a>
-<p id="account">Account</p>
+<a href="{% url 'views.account' %}"><p id="account">Account</p></a>
 <ul>
 <a href="{% url 'views.community' %}">
 <li class="outer">Community</li></a>
-<li class="outer"id="items" style="background-color:#66CCFF;">Items</li>
+<a href="{% url 'views.home' %}">
+<li class="outer"id="items" style="background-color:#66CCFF;">Items</li></a>
 </ul>
 <div id=center>
 <div id=sidemenu>
@@ -32,7 +29,7 @@
 </p>
 <ul>
 <a href="{% url 'views.home' %}"><li class="inner">All Items</li></a>
-<li class="inner" id="sidesel">MyPage</li>
+<a href="{% url 'views.user' user.id %}"><li class="inner" id="sidesel">MyPage</li></a>
 
 
 <a href="{% url 'views.add' %}"><li class="inner">Add</li></a>
@@ -43,6 +40,12 @@
 </div>
 
 <div id="list">
+{% if msg %}
+{% if deleted %}
+    <img src="{{ STATIC_URL}}images/snakeitem.gif" style="margin-left:100px;" width="300px" height="auto" />
+{% endif %}
+<p>{{ msg }}</p>
+{% endif %}
 
 {% for item in items %}
 <a href="{% url 'views.item' item.id %}">

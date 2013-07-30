@@ -15,8 +15,8 @@
 <img src="{{ STATIC_URL }}images/logo.gif" width="213" height="77" />
 </div>
 </a>
-<a href="{% url 'views.logout' %}"><p id=logout>Log Out</p></a>
-<p id="account">Account</p>
+<a href="{% url 'views.logout_user' %}"><p id=logout>Log Out</p></a>
+<a href="{% url 'views.account' %}"><p id="account">Account</p></a>
 <ul>
 <a href="{% url 'views.community' %}">
 <li class="outer" style="background-color:#66CCFF;">Community</li></a>
@@ -27,7 +27,7 @@
 <div id=center>
 <div id=sidemenu>
 <p>
-{% if exists %}
+{% if user %}
 {{ user.first_name }}
 {% else %}
 User {{ num }} not found.
@@ -59,8 +59,12 @@ User {{ num }} not found.
 		</div>
 		</a>
 {% empty %}
-<p> No items found </p>
+
+<p style="font-size:26px; width:100%;"> No items found </p>
+ <img src="{{ STATIC_URL}}images/sadsnake.gif" style="margin-left:80px;" width="300px" height="auto" />
+
 {% endfor %}
+
 
 </div>
 
@@ -69,7 +73,6 @@ User {{ num }} not found.
 </div>
 
 
-<!-- FACEBOOK LIKE BOX CSS POPUP WIDGET -->
 <style type="text/css">
 * html #tpfanbox{position:absolute}
 #tpfanbox{top:0px;left:0px;width:100%;height:100%;margin:0;overflow-y:auto; z-index:9999}
@@ -90,10 +93,10 @@ z-index:9999;}
 <ul>
 <li class="pop"><strong>Name:</strong> {{ user.get_full_name|default:"None" }}</li>
 <li class="pop"><strong>Email:</strong> {{ user.email|default:"None" }}</li>
-<li class="pop"><strong>Phone:</strong> {{ profile.telephone|default:"None" }} </li>
-<li class="pop"><strong>Address:</strong> {{ profile.address|default:"None" }} </li>
+<li class="pop"><strong>Phone:</strong> {{ user.profile.telephone|default:"None" }} </li>
+<li class="pop"><strong>Address:</strong> {{ user.profile.address|default:"None" }} </li>
 </ul>
-<img style="border:1px solid #999999; top:25px; right:25px; position:absolute;" src="{{ MEDIA_URL }}{{ profile.picture|default:"media/empty.gif" }}" width="170" height="170" /> </a>
+<img style="border:1px solid #999999; top:25px; right:25px; position:absolute;" src="{{ MEDIA_URL }}{{ user.profile.picture|default:"media/empty.gif" }}" width="170" height="170" /> </a>
 </center>
 
 </div>
@@ -106,7 +109,7 @@ z-index:9999;}
 document.getElementById('tpfanbox').style.display='none';
 
 </script>
-<!-- FACEBOOK LIKE BOX CSS POPUP WIDGET -->
+
 
 
 
