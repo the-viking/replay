@@ -2,10 +2,11 @@ from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.template import Context
 from django.core.exceptions import ObjectDoesNotExist
-from exchange.models import Item
+from exchange.models import Item, Notification
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+import settings
 import datetime
 
 URL = 'http://replay-project.net/'
@@ -33,39 +34,74 @@ def home(request):
     else:
 	    return render(request, 'index.html', { 'errors' : errors })
 
+def get_item(num):
+    try:
+        offset = int(num)
+    except ValueError:
+        raise Http404()
+    try:
+        item = Item.objects.get(id=num)
+    except ObjectDoesNotExist:
+        item = False
+    return item
+
 # view to access items
 def item(request, num):
     if not request.user.is_authenticated():
         return HttpResponseRedirect(URL)
     else:
     # make sure inputted id is an integer
-        try:
-            offset = int(num)
-        except ValueError:
-            raise Http404()
-
-    # try to get this item from the database, give an error message if it doesn't exist 
-        try:
-            item = Item.objects.get(id=num)
+        item = get_item(num)
+        sent = False
+        if item:
             owner= User.objects.get(id=item.offered_by.id)
-            yours = int(num) == owner.id
-        except ObjectDoesNotExist:
-            item = False
+            yours = request.user == owner
+        else:
             owner = False
             yours = False
-        return render(request, 'view_item.html', {'owner' : owner, 'item' : item, 'yours' : yours })
+        return render(request, 'view_item.html', {'owner' : owner, 'item' : item, 'yours' : yours, 'sent' : sent })
 
-def edit(request):
+def edit(request, id):
     if not request.user.is_authenticated():
         return HttpResponseRedirect(URL)
     else:
-        return HttpResponseRedirect(URL)
+        item = get_item(id)
+        if item:
+            owner= User.objects.get(id=item.offered_by.id)
+            yours = request.user == owner
+        else:
+            owner = False
+            yours = False
+        return render(request, 'view_item.html', { 'edit' : True, 'owner' : owner, 'item' : item, 'yours' : yours })
 
-def delete(request):
+def notify(request, id):
     if not request.user.is_authenticated():
         return HttpResponseRedirect(URL)
     else:
+        item = get_item(id)
+        if item:
+            owner= User.objects.get(id=item.offered_by.id)
+            yours = request.user == owner
+            note = Notification(sent_to = owner, sent_from = request.user, item = item, visible = True)
+            note.save()
+            sent = True
+        else:
+            owner = False
+            yours = False
+            sent = False
+        return render(request, 'view_item.html', {'owner' : owner, 'item' : item, 'yours' : yours, 'sent' : sent })
+
+def delete(request, id):
+    if not request.user.is_authenticated():
         return HttpResponseRedirect(URL)
+    else:
+        msg = ''
+        item = get_item(id)
+        if(item):
+            if request.user == item.offered_by:
+                Item.delete(item)
+                msg = item.name + " deleted succesfully!"
+    return render(request, 'items_mypage.html', { 'msg' : msg })
 
 def user(request, num): 
     if not request.user.is_authenticated():
@@ -79,10 +115,15 @@ def user(request, num):
         try:
             user = User.objects.get(id=num)
             items = Item.objects.filter(offered_by_id=num)
-            yours = user.id == int(num)
+            yours = request.user.id == user.id
         except ObjectDoesNotExist:
             user = False
-        return render(request, 'items_mypage.html', { 'user' : user, 'items' : items, 'yours' : yours })
+            items = False
+            yours = False
+        if not yours:
+            return render(request, 'community_friends_2.html', { 'user' : user, 'items' : items })
+        else: 
+            return render(request, 'items_mypage.html', { 'user' : user, 'items' : items })
 
 
 def add(request):
@@ -90,52 +131,47 @@ def add(request):
         return HttpResponseRedirect(URL)
     else:
         errors = []
-        id = 0
+        item = False
+        form = True
+        msg = ''
+        desc = False
+        name = False
         if request.method == 'POST':
             if not request.POST.get('name', ''):
                 errors.append('Enter a name.')
+            else:
+                name = request.POST['name']
             if not request.POST.get('desc', ''):
                 errors.append('Enter a description.')
+            else:
+                desc = request.POST['desc']
+            if 'image' not in request.FILES:
+                errors.append('Please submit an image')
+            else:
+                file = request.FILES['image']
+                errors = errors + invalid(file)  
             if not errors:
-                item = Item(name=request.POST['name'], description=request.POST['desc'], offered_by = request.user, image=request.FILES['url'] )
+                item = Item(name=name, description=desc, offered_by = request.user, image=file )
                 item.save()
                 id = item.id
             form = bool(errors)
-        return render(request, 'add.html', { 'id' : id, 'uid' : request.user.id, 'errors' : errors, 'form' : form})
+        return render(request, 'add.html', { 'item' : item, 'uid' : request.user.id, 'errors' : errors, 'form' : form, 'msg' : msg, 'desc':desc, 'name':name})
 
-def added(request):
-    now = datetime.datetime.now()
-    user = User.objects.get(id=1)
+# helper function for image handling views to check file type and size
+def invalid(file):
     errors = []
-    if 'title' in request.POST and request.POST['title']:
-        title = request.POST['title']
-        if 'url' in request.POST and request.POST['url']:
-            url = request.POST['title']
-            if 'usn' in request.POST and request.POST['usn']:
-                usn = request.POST['usn']
-                if 'descr' in request.POST and request.POST['descr']:
-                    desc = request.POST['descr']
-                    new_item = Item(name = title, offered_date = now, description = desc, image = url, offered_by = user)
-                    new_item.save()
-                    link = "../item/" + str(new_item.id)
-                    return render(request, 'added.html', {'id_link' : link, 'title' : title})
-                else:
-                    errors.append("Please enter a description.")
-            else:
-                errors.append("Please enter a username.")
-        else:
-            errors.append("Please enter a URL.")
-    else:
-        errors.append("Please enter a title")
-
-    return render(request, 'added.html', {'errors' : errors})
+    file_type = file.content_type.split('/')[0]
+    if file_type not in settings.TASK_UPLOAD_FILE_TYPES:
+        errors.append('File type is not supported.')
+    if file._size > settings.TASK_UPLOAD_FILE_MAX_SIZE:
+        errors.append('Your image is too big.')
+    return errors
 
 def all_items(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect(URL)
     else:
-        list_items = Item.objects.all()
-        return render(request, 'all.html', {'items' : list_items})
+        return render(request, 'all.html', {'items' : Item.objects.all()})
     
 def logout_user(request):
     logout(request)
@@ -145,14 +181,20 @@ def account(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect(URL)
     else:
-        return HttpResponseRedirect(URL) 
+        user = request.user
+        if request.method == 'POST':
+            profile = user.profile
+            if 'image' in reqest.FILES:
+                image = request.FILES['image']
+                errors = invalid(image)
+                if not errors: 
+                    profile.picture = image
+            user.save()
+            profile.save()
+        return render(request, 'accounts.html', {'user' : user} )
 
 def community(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect(URL)
     else:
-        users = User.objects.all()
-        return render(request, 'community_friends.html', {'users' : users })
-
-def my_page(request):
-    return HttpResponseRedirect(URL)
+        return render(request, 'community_friends.html', {'users' : User.objects.all() })

@@ -102,6 +102,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -163,3 +164,5 @@ LOGGING = {
 }
 
 AUTH_PROFILE_MODULE = 'exchange.Profile'
+TASK_UPLOAD_FILE_TYPES = ['jpg', 'png', 'gif', 'jpeg', 'JPG', 'image', 'IMAGE', ]
+TASK_UPLOAD_FILE_MAX_SIZE = "4242880"

@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 
 class Item(models.Model):
+    class Meta:
+            ordering = ['offered_date']
     name = models.CharField(max_length=200)
     offered_date = models.DateTimeField(auto_now_add=True, blank=True)
     description = models.CharField(max_length=500)  
@@ -12,12 +14,6 @@ class Item(models.Model):
     image = models.FileField(upload_to='media/images/%Y')
     def __unicode__(self):
         return self.name
-
-    def check(self):
-        valid = True
-        name = self.image.name
-        name = name + "filename: " + str(self.image.name)
-        return name
 
 # indicates a notification from one user to another, requesting an item
 class Notification(models.Model):
