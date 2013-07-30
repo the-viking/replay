@@ -2,47 +2,75 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Untitled Document</title>
+<title>Account Settings</title>
+<link href="{{ STATIC_URL }}css/style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
-[x]
-<ul style="text-align:left;
-
-
-width:440px;	
-font-size:24px;
-color:#999999;
-background-color:transparent;
-float:left;
-display:block;	
-margin-left:10px;
-word-wrap: break-word;
-height:auto;
-line-height:170%;">
-
-<li>First Name:<textarea id="id_name" name="name">{{user.first_name}}
-</textarea>    </li> 
-<li>Last Name:<textarea id="id_name" name="name">{{user.last_name}}
-</textarea>    </li> 
-<li>Email:<textarea id="id_email" name="email">{{user.email}}
-</textarea></li>
-<li>Phone:<textarea id="id_phone" name="phone">{{user.phone}}
-</textarea></li>
-<li>
-  Address:<textarea id="id_more" name="more">
-{{user.address}}</textarea></li>
-
-
-<img style="border:1px solid #999999; top:25px; right:25px; position:absolute;" src="empty.gif" width="170" height="170" /> 
-</ul>
-
-<ul>
-<li class="pop">Save</li>
-</ul>
+<div id=container>
+<a href="{% url 'views.home' %}">
+<div id=logo>
+<img src="{{ STATIC_URL }}images/logo.gif" width="213" height="77" />
+</div>
 </a>
-</center>
+<a href="{% url 'views.logout_user' %}"><p id=logout>Log Out</p></a>
+{% if changed %}
+<p style="position:absolute; top:70px;"> Account changed succesfully </p>
+{% endif %}
 
+{% if errors %}
+<ul>
+{% for error in errors %}
+<li>Error</li>
+{% endfor %}
+</ul>
+{% endif %}
+<div style="width:800px; padding:10px;margin-left:auto; margin-right:auto;">
+
+<div style="width:600px; margin-top:80px; margin-right:210px;">
+
+<form method="post" action="" enctype="multipart/form-data" >
+{% csrf_token %}
+<ul id="accounts">
+<li>ID:
+  <textarea class="forms"  name="name">{{user.username}}</textarea></li>
+<li>Password:<input class="forms" type="password" name="pwd"></li>
+<li>PW Confirm:<input class="forms" type="password" name="pwd_conf"></li>
+<li>Profile Picture:<input class="forms" type="file" name="image"/></li>
+
+
+</br>
+
+
+<li>First Name:<textarea name="firstname" class="forms">{{user.first_name}}</textarea>    </li> 
+<li>Last Name:<textarea name="lastname" class="forms">{{user.last_name}}</textarea>    </li> 
+<li>Email:<textarea name="email" class="forms">{{user.email}}</textarea></li>
+<li>Phone:<textarea name="phone" class="forms">{{user.profile.telephone}}</textarea></li>
+<li>
+  Address:<textarea name="address" class="forms" style="margin-top:15px; height:40px;">{{user.profile.address}}</textarea></li>
+</br>
+</ul>
+
+</div>
+<img style="border:1px solid #999999; float:right;" src="{{ MEDIA_URL }}{{ user.profile.picture|default:"media/empty.gif" }}" width="170" height="170" /> 
+<ul>
+<input type="submit" value="Save" class="inner" id="viewcontact" class="pop">
+<a href="javascript: history.go(-1)"><li class="inner" id="viewdelete" class="pop">Cancel</li></a>
+</form>
+</ul>
+
+</div>
+
+
+
+ <div id=empty>
+</div>
+<ul id=foot>
+<li style="width:7em;" class="bottom">About us</li>
+<li class="bottom">Contact</li>
+</ul>
+
+		</div>
 
 </body>
 </html>
