@@ -11,7 +11,7 @@ in the exchange app (exchange/models.py), project settings in play/settings.py,
 view controller functions in play/views.py, and html templates in
 the templates directory.
 
-Models (Profiles, Users, Items and Notifications
+Models (Profiles, Users, Items and Notifications)
 are stored in a MySQL database.
 
 Static files (css and site images) and user added images are stored
