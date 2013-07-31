@@ -2,9 +2,15 @@ from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
 from exchange.models import Item, Notification
+from stickies.models import Sticky
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 import settings
+from django.utils.html import strip_tags
+
+# dajax things
+from django.utils import simplejson
+from dajaxice.decorators import dajaxice_register
 
 # site url, used for redirecting to homepage
 URL = 'http://replay-project.net/'
@@ -35,7 +41,9 @@ def home(request):
             else:
                 errors.append('Wrong username or password')
     if request.user.is_authenticated():
-        return render(request, 'items_allitems.html', { 'id' : request.user.id, 'items' : Item.objects.all() })
+        notes = Notification.objects.filter(sent_to=request.user)
+        noted_items = [n.item for n in notes]
+        return render(request, 'items_allitems.html', { 'id' : request.user.id, 'items' : Item.objects.all(), 'noted_items': noted_items })
     else:
 	    return render(request, 'index.html', { 'errors' : errors })
 
@@ -76,13 +84,19 @@ def item(request, num):
     # make sure inputted id is an integer
         item = get_item(num)
         sent = False
+        note = False
         if item:
             owner= User.objects.get(id=item.offered_by.id)
             yours = request.user == owner
+            if yours:
+                notes = Notification.objects.filter(sent_to=request.user)
+                noted_items = [n.item for n in notes]
+                if item in noted_items:
+                    note = notes.get(item=item)
         else:
             owner = False
             yours = False
-        return render(request, 'view_item.html', {'owner' : owner, 'item' : item, 'yours' : yours, 'sent' : sent })
+        return render(request, 'view_item.html', {'owner' : owner, 'item' : item, 'yours' : yours, 'sent' : sent, 'note': note })
 
 def edit(request, id):
     """
@@ -101,16 +115,23 @@ def edit(request, id):
             owner= User.objects.get(id=item.offered_by.id)
             yours = request.user == owner
             if request.method == 'POST':
-                item.name = request.POST['name']
-                item.description = request.POST['desc']
+                if len(request.POST['name']) > 40:
+                    errors.append("Please enter a shorter name")
+                else:
+                    item.name = strip_tags(request.POST['name'])
+                if len(request.POST['desc']) > 400:
+                    errors.append("Please enter a shorter description")
+                else:
+                    item.description = strip_tags(request.POST['desc'])
                 if 'image' in request.FILES:
                     file = request.FILES['image']
                     errors = errors + invalid(file)
                     if not errors:
                         item.image = file
-                item.save()
-                edited = True
-                edit = False
+                if not errors:
+                    item.save()
+                edited = not bool(errors
+                edit = bool(errors)
         else:
             owner = False
             yours = False
@@ -180,7 +201,9 @@ def user(request, num):
         if not yours:
             return render(request, 'community_friends_2.html', { 'user' : user, 'items' : items })
         else: 
-            return render(request, 'items_mypage.html', { 'user' : user, 'items' : items })
+            notes = Notification.objects.filter(sent_to=request.user)
+            noted_items = [n.item for n in notes]
+            return render(request, 'items_mypage.html', { 'user' : user, 'items' : items, 'noted_items' : noted_items })
 
 
 def invalid(file):
@@ -217,11 +240,15 @@ def add(request):
             if not request.POST.get('name', ''):
                 errors.append('Enter a name.')
             else:
-                name = request.POST['name']
+                name = strip_tags(request.POST['name'])
+                if len(name) > 40:
+                    errors.append('Enter a shorter name')
             if not request.POST.get('desc', ''):
                 errors.append('Enter a description.')
             else:
-                desc = request.POST['desc']
+                desc = strip_tags(request.POST['desc'])
+                if len(desc) > 400:
+                    errors.append('Enter a shorter description')
             if 'image' not in request.FILES:
                 errors.append('Please submit an image')
             else:
@@ -310,3 +337,14 @@ def community(request):
         return HttpResponseRedirect(URL)
     else:
         return render(request, 'community_friends.html', {'users' : User.objects.all() })
+
+def ask(request):
+    """
+    Displays all stickies,
+    allows users to edit
+    and add new ones
+    """
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect(URL)
+    else:
+        return render(request, 'ask.html', {'stickies' : Sticky.objects.all() })

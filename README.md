@@ -21,8 +21,12 @@ tracked here.
 Files used for server deplyment on a shared fcgi hosting environment
 are backed up in the server directory.
 
-Project checklist:
+Project to do:
 - [x] users can log in and browse or add items
 - [x] users can (optionally) add additional contact info or profile pitcures
 - [x] items can be edited and deleted
-- [ ] notifications can be sent to indicate interest in an item
+- [x] notifications can be sent to indicate interest in an item
+- [ ] update display of models in admin page
+- [ ] add translation tags, can change language from admin page
+- [ ] move inline css to stylesheets
+- [ ] move common navigation elements to a base template

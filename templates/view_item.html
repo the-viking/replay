@@ -90,6 +90,9 @@ overflow:auto;">
 </div>
 {% else %}
 <div id="main">
+{% if note %}
+<p id="notifiation">Notification from {{ note.sent_from }} on {{ note.date}}</p>
+{% endif %}
 		<div id="viewname">A {{ item.name }} </div>
                     
 <div id="viewimage">

@@ -32,22 +32,19 @@
 <form method="post" action="" enctype="multipart/form-data" >
 {% csrf_token %}
 <ul id="accounts">
-<li>ID:
-  <textarea class="forms"  name="name">{{user.username}}</textarea></li>
-<li>Password:<input class="forms" type="password" name="pwd"></li>
-<li>PW Confirm:<input class="forms" type="password" name="pwd_conf"></li>
+<li>ID:<span id="mand">*</span><textarea class="forms"  name="name">{{user.username}}</textarea></li>
+<li>Password:<span id="mand">*</span><input class="forms" type="password" name="pwd"></li>
+<li>PW Confirm:<span id="mand">*</span><input class="forms" type="password" name="pwd_conf"></li>
 <li>Profile Picture:<input class="forms" type="file" name="image"/></li>
 
 
 </br>
 
 
-<li>First Name:<textarea name="firstname" class="forms">{{user.first_name}}</textarea>    </li> 
+<li>First Name:<span id="mand">*</span><textarea name="firstname" class="forms">{{user.first_name}}</textarea>    </li> 
 <li>Last Name:<textarea name="lastname" class="forms">{{user.last_name}}</textarea>    </li> 
 <li>Email:<textarea name="email" class="forms">{{user.email}}</textarea></li>
 <li>Phone:<textarea name="phone" class="forms">{{user.profile.telephone}}</textarea></li>
-<li>
-  Address:<textarea name="address" class="forms" style="margin-top:15px; height:40px;">{{user.profile.address}}</textarea></li>
 </br>
 </ul>
 

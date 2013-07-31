@@ -1,10 +1,13 @@
 # from django.conf.urls.defaults import *
 from django.conf.urls import *
-from django.views.generic.base import TemplateView
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
+
+from dajaxice.core import dajaxice_autodiscover, dajaxice_config
+dajaxice_autodiscover()
 
 urlpatterns = patterns('play.views',
     url(r'^$', 'home'),
@@ -19,7 +22,7 @@ urlpatterns = patterns('play.views',
     url(r'^logout/$', 'logout_user'),
     url(r'^account/$', 'account'),
     url(r'^i18n/', include('django.conf.urls.i18n')),
-    url(r'^ask$', TemplateView.as_view(template_name='ask.html'), name="ask"),
+    url(r'^ask/$', 'ask', name="ask"),
 
     # url(r'^replay/', include('replay.foo.urls')),
 
@@ -29,3 +32,4 @@ urlpatterns = patterns('play.views',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 )
+urlpatterns += staticfiles_urlpatterns()
