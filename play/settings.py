@@ -3,6 +3,7 @@
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+# variables for home directory, url and puclic html directories
 HOME = '/home3/replaypr/'
 PUBLIC = HOME + 'public_html/'
 URL = "http://replay-project.net/"
@@ -103,6 +104,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -132,6 +134,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
 	'exchange',
 	'sorl.thumbnail',
+    'debug_toolbar',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -163,6 +166,9 @@ LOGGING = {
     }
 }
 
+# set Profile model as an extension of built in User model
 AUTH_PROFILE_MODULE = 'exchange.Profile'
+# parameters for image validation
 TASK_UPLOAD_FILE_TYPES = ['jpg', 'png', 'gif', 'jpeg', 'JPG', 'image', 'IMAGE', ]
 TASK_UPLOAD_FILE_MAX_SIZE = "4242880"
+INTERNAL_IPS = ('128.84.127.176', '172.16.6.156',)
