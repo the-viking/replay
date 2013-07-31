@@ -1,5 +1,6 @@
 # from django.conf.urls.defaults import *
 from django.conf.urls import *
+from django.views.generic.base import TemplateView
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -17,6 +18,8 @@ urlpatterns = patterns('play.views',
     url(r'^community/$', 'community'),
     url(r'^logout/$', 'logout_user'),
     url(r'^account/$', 'account'),
+    url(r'^i18n/', include('django.conf.urls.i18n')),
+    url(r'^ask$', TemplateView.as_view(template_name='ask.html'), name="ask"),
 
     # url(r'^replay/', include('replay.foo.urls')),
 

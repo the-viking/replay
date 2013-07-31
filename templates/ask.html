@@ -13,30 +13,79 @@
 <img src="{{ STATIC_URL }}images/logo.gif" width="213" height="77" />
 </div>
 </a>
-<a href="{% url 'views.logout' %}"><p id=logout>Log Out</p></a>
-<p id="account">Account</p>
+<a href="{% url 'views.logout_user' %}"><p id=logout>Log Out</p></a>
+<a href="{% url 'views.account' %}"><p id="account">Account</p></a>
 <ul>
 <a href="{% url 'views.community' %}">
 <li class="outer" style="background-color:#66CCFF;">Community</li></a>
-<li class="outer"id=items>Items</li>
+<a href="{% url 'views.home' %}"><li class="outer"id=items>Items</li></a>
 </ul>
 <div id=center>
 <div id=sidemenu>
 <p>Friends</p>
 <ul>
-<li class="inner">Ask</li>
-<li class="inner" id="sidesel">Friends</li>
+<a href="{% url 'ask' %}"><li class="inner" id="sidesel">Ask</li></a>
+<a href="{% url 'views.community' %}"><li class="inner">Friends</li></a>
 </ul>
 </div>
-		<div>
+	
 			
-			<div id="main">
-				<iframe src='http://padlet.com/embed/9ilbcdhc2g' frameborder='0' width='100%' height='480px' style='padding:0;margin:0;border:none'></iframe>
-            <div id=empty>
+			<div id="list">
+				<ul class="stick">
+    <li>
+      <a href="#">
+        <h2>{{ user.first_name }}</h2>
+        <p>I want a puppy dog that is really really really really cute and brownish.</p>
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <h2>{{ user.first_name }}</h2>
+        <p>Text I want a puppy dog that is really really really really cute and brownish. #2</p>
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <h2>{{ user.first_name }}</h2>
+        <p>TI want a puppy dog that is really really really really cute and brownish.I want a puppy dog that is really really really really cute and brownish.</p>
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <h2>{{ user.first_name }}</h2>
+        <p>TI want a puppy dog that is really really really really cute and brownish.4</p>
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <h2>{{ user.first_name }}</h2>
+        <p>Textsdakdsakdskhasashkjdsahdkshksajhdaskjhdkajshdkjaskjdasgfjhgdjkfdksjafhsjdhkajshgkajhgkjjkhfgadhkjgh</p>
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <h2>{{ user.first_name }}</h2>
+        <p>Text Content #6</p>
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <h2>{{ user.first_name }}</h2>
+        <p>Text Content #2</p>
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <h2>{{ user.last_name }}</h2>
+        <p>Text Content #7</p>
+      </a>
+    </li>
+  
+  </ul>
+  </div>
+           <div id=empty>
+</div> 
 </div>
-</div>
-</div>
-
 
 
 <ul id=foot>

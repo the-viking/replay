@@ -172,3 +172,9 @@ AUTH_PROFILE_MODULE = 'exchange.Profile'
 TASK_UPLOAD_FILE_TYPES = ['jpg', 'png', 'gif', 'jpeg', 'JPG', 'image', 'IMAGE', ]
 TASK_UPLOAD_FILE_MAX_SIZE = "4242880"
 INTERNAL_IPS = ('128.84.127.176', '172.16.6.156',)
+
+LANGUAGES = (
+    ('es', 'Spanish'),
+    ('en', 'English'),
+    ('sv', 'Swedish'),
+)
