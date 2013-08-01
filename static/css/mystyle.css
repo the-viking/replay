@@ -23,12 +23,13 @@ div div p{
 font-size:1.1em;
 color:#7E7E7E;
 }
+
 #login{
-		background-color:#FFFFFF;
+background-color:#CCFFFF;;
 border-style:solid;
 border-width:1px;
 border-color:#C7EDFF;
-	padding-left:8px;
+padding-left:8px;
 padding-top:2px;
 poistion:fixed;
 height:95px;
@@ -142,4 +143,11 @@ height:2.5em;
 line-height:2.5em;
 vertical-align:middle;
 margin-left:1em;
+}
+
+.rounded-corners {
+     -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -khtml-border-radius: 10px;
+    border-radius: 10px;
 }

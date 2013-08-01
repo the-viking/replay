@@ -39,13 +39,12 @@
 				<ul class="stick">
     {% for sticky in stickies %}
     <li>
-      <a href="#" class="note">
+      <div class="note">
         <h2>{{ sticky.writer }}</h2>
         <p>{{ sticky.message }}</p>
-      </a>
+      </div>
     </li>
     {% endfor %}
-
   </ul>
   </div>
            <div id=empty>
@@ -69,17 +68,24 @@ z-index:9999;}
 <ul class="stick">
    <li>
    
-    <a href="#" class="note" style="width:16em; height:16em;">
-    <form method="post" action="" enctype="multipart/form-data" >
+    <div class="note" style="width:16em; height:16em;">
+    <form method="post" action="">
 {% csrf_token %}
         <h2>{{ user.first_name }}</h2>
-        <textarea style=" border:solid; width:260px; height:220px; font-size:25px;" name="sticktext" class="forms">I would like...</textarea>
+        <textarea style="background-color:white; border:solid; width:260px; height:220px; font-size:25px;" name="sticktext" class="forms">I would like...</textarea>
         
         <input type="submit" value="Save" class="inner" style="border:none; background-color:transparent;font-size:12px; color:#606070; text-decoration:none;">
          <p style="font-size:12px; color:#606070; text-decoration:none;" onmouseup="document.getElementById('tpfanbox').style.display='none'">
 cancel</p>
 </form>
-      </a>
+    {% if errors %}
+        <ul style="margin-top:-20px; color:red;">
+            {% for error in errors %}
+                <li> {{ error }} </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+      </div>
      
 
       

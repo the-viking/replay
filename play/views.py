@@ -341,4 +341,16 @@ def ask(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect(URL)
     else:
-        return render(request, 'ask.html', {'stickies' : Sticky.objects.all() })
+        errors = []
+        text = False
+        if request.method == 'POST':
+            if not request.POST.get('sticktext', ''):
+                errors.append('Enter some text for your sticky.')
+            else:
+                text = request.POST['sticktext']
+                if len(text) > 70:
+                    errors.append('Your text is too long')
+            if not errors:
+               sticky = Sticky(writer = request.user, message = text) 
+               sticky.save()
+        return render(request, 'ask.html', {'stickies' : Sticky.objects.all(), 'errors' : errors })
