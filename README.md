@@ -6,7 +6,7 @@ out of the Information Science department of Cornell University in summer of 201
 Replay is meant to explore notions of necessity and people' feelings about what things
 they really need and make them happy.
 
-![logo of sorts](https://github.com/the-viking/replay/blob/master/static/images/snakeitem.gif)
+![logo of sorts](https://github.com/the-viking/replay/blob/master/static/images/snakeitem.gif?raw=true)
 
 Implementation
 --------------
