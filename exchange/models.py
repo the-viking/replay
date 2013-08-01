@@ -4,7 +4,7 @@ from django.dispatch import receiver
 from django.contrib.auth.models import User
 
 class Item(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=40)
     offered_date = models.DateTimeField(auto_now_add=True, blank=True)
     description = models.CharField(max_length=500)  
     offered_by = models.ForeignKey(User)

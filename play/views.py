@@ -130,7 +130,7 @@ def edit(request, id):
                         item.image = file
                 if not errors:
                     item.save()
-                edited = not bool(errors
+                edited = not bool(errors)
                 edit = bool(errors)
         else:
             owner = False
