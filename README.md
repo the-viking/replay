@@ -6,6 +6,11 @@ out of the Information Science department of Cornell University in summer of 201
 Replay is meant to explore notions of necessity and people' feelings about what things
 they really need and make them happy.
 
+![logo of sorts](https://github.com/the-viking/replay/blob/master/static/images/snakeitem.gif)
+
+Implementation
+--------------
+
 Replay is implemented as a Django application, with the models defined
 in the exchange app (exchange/models.py), project settings in play/settings.py, 
 view controller functions in play/views.py, and html templates in
@@ -22,6 +27,7 @@ Files used for server deplyment on a shared fcgi hosting environment
 are backed up in the server directory.
 
 Project to do:
+--------------
 - [x] users can log in and browse or add items
 - [x] users can (optionally) add additional contact info or profile pitcures
 - [x] items can be edited and deleted
