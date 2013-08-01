@@ -1,23 +1,20 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+{% extends "base_items.html" %}
 
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title> </title>
-	<link rel="stylesheet" type="text/css" href="style.css" />
-</head>
+{% block label %}All Items{% endblock %}
 
-<body>
-<div id="main">
-		<dl>
-		{% for item in items %}
-		<dt> {{ item.name }} </dt>
-		<dd> {{ item.offered_by.name }} </dd>
-		<dd> {{ item.offered_date }} </dd>
-		{% endfor %}
-		</dl>
-        <p> {{ msg }}
+{% block all_link %}id="sidesel"{% endblock %}
+
+{% block content %}
+<div id=list>
+
+    {% for item in items %}
+    <a href="{% url 'views.item' item.id %}">
+        <div class="item"{% if item in noted_items %}style="border:3px solid #F50F1A; width:106px; height:124px;"{% endif %}>
+            <img src="{{ item.image }}" width="110" height="110">
+            {{ item.name|truncatechars:12 }}
+        </div>
+    </a>
+    {% endfor %}
+
 </div>
-</body>
-</html>
-
+{% endblock %}

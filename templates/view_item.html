@@ -100,7 +100,7 @@ overflow:auto;">
 		<div id="viewdesc"> {{ item.description }} 
 
 {% if sent %}
-<p>{{ owner }} notified succesfully!</p>
+<p>{{ user }} notified succesfully!</p>
 {% endif %}
 
 </div>
@@ -109,7 +109,7 @@ overflow:auto;">
 {% if yours %}
 Your
 {% else %}
-{{ owner.first_name }}'s 
+{{ user.first_name }}'s 
 {% endif %}
 Item 
 </div>

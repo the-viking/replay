@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>{% block title %}re:play{% endblock %}</title>
+<link href="{{ STATIC_URL }}css/style.css" rel="stylesheet" type="text/css" />
+{% block javascript %} {% endblock %}
+</head>
+
+<body>
+<div id=container>
+<a href="{% url 'views.home' %}">
+<div id=logo> 
+<img src="{{ STATIC_URL }}images/logo.gif" width="213" height="77" />
+</div>
+</a>
+
+{% block userbar %}
+<a href="{% url 'views.logout_user' %}"><p>Log Out</p></a>
+<a href="{% url 'views.account' %}"><p id="account">Account</p></a>
+{% endblock %}
+
+<ul>
+{% block topbar %}
+
+{% endblock %}
+</ul>
+
+<div id=center>
+<div id=sidemenu>
+
+<p>{% block label %} {% endblock %}</p>
+
+<ul>
+{% block sidebar %}
+
+{% endblock %}
+</ul>
+</div>
+
+{% block content %}
+
+{% endblock %}
+
+<div id=empty>
+</div>
+</div>
+
+{% block contact %}
+
+{% endblock %}
+
+{% block footer %}
+<ul id=foot>
+<li style="width:7em;" class="bottom">About us</li>
+<li class="bottom">Contact</li>
+</ul>
+{% endblock %}
+</div>
+</body>
+</html>

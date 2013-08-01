@@ -1,0 +1,20 @@
+{% extends "base_community.html" %}
+
+{% block label %}Community{% endblock %}
+
+{% block friends_link %}id="sidesel"{% endblock %}
+
+{% block content %}
+
+<div id=list>
+    {% for user in users %}
+        <a href="{% url 'views.user' user.id %}">
+            <div class="item">
+                <img src="{{ MEDIA_URL }}{{ user.profile.picture|default:'empty.gif' }}" width="110" height="110">
+                {{ user.first_name|truncatechars:12 }}
+            </div>
+        </a>
+    {% endfor %}
+</div>
+
+{% endblock %}

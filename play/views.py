@@ -43,7 +43,8 @@ def home(request):
     if request.user.is_authenticated():
         notes = Notification.objects.filter(sent_to=request.user)
         noted_items = [n.item for n in notes]
-        return render(request, 'items_allitems.html', { 'id' : request.user.id, 'items' : Item.objects.all(), 'noted_items': noted_items })
+        page_title = 'All Items'
+        return render(request, 'all.html', { 'id' : request.user.id, 'items' : Item.objects.all(), 'noted_items': noted_items })
     else:
 	    return render(request, 'index.html', { 'errors' : errors })
 
@@ -86,17 +87,17 @@ def item(request, num):
         sent = False
         note = False
         if item:
-            owner= User.objects.get(id=item.offered_by.id)
-            yours = request.user == owner
+            user = User.objects.get(id=item.offered_by.id)
+            yours = request.user == user
             if yours:
                 notes = Notification.objects.filter(sent_to=request.user)
                 noted_items = [n.item for n in notes]
                 if item in noted_items:
                     note = notes.get(item=item)
         else:
-            owner = False
+            user = False
             yours = False
-        return render(request, 'view_item.html', {'owner' : owner, 'item' : item, 'yours' : yours, 'sent' : sent, 'note': note })
+        return render(request, 'view_item.html', {'user' : user, 'item' : item, 'yours' : yours, 'sent' : sent, 'note': note })
 
 def edit(request, id):
     """
@@ -119,7 +120,7 @@ def edit(request, id):
                     errors.append("Please enter a shorter name")
                 else:
                     item.name = strip_tags(request.POST['name'])
-                if len(request.POST['desc']) > 400:
+                if len(request.POST['desc']) > 500:
                     errors.append("Please enter a shorter description")
                 else:
                     item.description = strip_tags(request.POST['desc'])
@@ -199,11 +200,11 @@ def user(request, num):
             items = False
             yours = False
         if not yours:
-            return render(request, 'community_friends_2.html', { 'user' : user, 'items' : items })
+            return render(request, 'community.html', { 'user' : user, 'items' : items })
         else: 
             notes = Notification.objects.filter(sent_to=request.user)
             noted_items = [n.item for n in notes]
-            return render(request, 'items_mypage.html', { 'user' : user, 'items' : items, 'noted_items' : noted_items })
+            return render(request, 'mypage.html', { 'user' : user, 'items' : items, 'noted_items' : noted_items })
 
 
 def invalid(file):
@@ -247,7 +248,7 @@ def add(request):
                 errors.append('Enter a description.')
             else:
                 desc = strip_tags(request.POST['desc'])
-                if len(desc) > 400:
+                if len(desc) > 500:
                     errors.append('Enter a shorter description')
             if 'image' not in request.FILES:
                 errors.append('Please submit an image')
@@ -258,16 +259,9 @@ def add(request):
                 item = Item(name=name, description=desc, offered_by = request.user, image=file )
                 item.save()
             form = bool(errors)
-        return render(request, 'add.html', { 'item' : item, 'uid' : request.user.id, 'errors' : errors, 'form' : form, 'msg' : msg, 'desc':desc, 'name':name})
+        return render(request, 'add.html', { 'item' : item, 'id' : request.user.id, 'errors' : errors, 'form' : form, 'msg' : msg, 'desc':desc, 'name':name})
 
 
-def all_items(request):
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect(URL)
-    else:
-        ip = str(get_client_ip(request))
-        return render(request, 'all.html', {'items' : Item.objects.all(), 'msg' : ip})
-    
 def logout_user(request):
     """
     calls the built-in logout
@@ -336,7 +330,7 @@ def community(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect(URL)
     else:
-        return render(request, 'community_friends.html', {'users' : User.objects.all() })
+        return render(request, 'community.html', {'users' : User.objects.all() })
 
 def ask(request):
     """

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block topbar %}
+    <a href="{% url 'views.community' %}">
+        <li class="outer" style="background-color:#66CCFF;">Community</li>
+    </a>
+    <a href="{% url 'views.home' %}">
+        <li class="outer" id="items">Items</li>
+    </a>
+{% endblock %}
+
+{% block sidebar %}
+    <a href="{% url 'ask' %}">
+        <li class="inner" {% block ask_link %} {% endblock %}>Ask</li>
+    </a>
+    <a href="{% url 'views.community' %}">
+        <li class="inner" {% block friends_link %} {% endblock %}>Friends</li>
+    </a>
+{% endblock %}
+

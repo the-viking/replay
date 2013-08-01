@@ -1,0 +1,27 @@
+{% extends "base_items.html" %}
+
+{% block label %}My Page{% blocklabel %}
+
+{% block my_link %}id="sidesel"{% endblock %}
+
+{% block content.html %}
+
+<div id="list">
+    {% if msg %}
+        {% if deleted %}
+            <img src="{{ STATIC_URL}}images/snakeitem.gif" style="margin-left:100px;" width="300px" height="auto" />
+        {% endif %}
+        <p>{{ msg }}</p>
+    {% endif %}
+
+    {% for item in items %}
+        <a href="{% url 'views.item' item.id %}">
+            <div class="item" {% if item in noted_items %}style="border:3px solid #F50F1A; width:106px; height:124px;"{% endif %}>
+                <img src="{{ MEDIA_URL }}{{ item.image }}" width="110" height="110">
+                {{ item.name|truncatechars:12 }}
+            </div>
+        </a>
+    {% endfor %}
+</div>
+
+{% endblock %}

@@ -29,6 +29,8 @@
 <ul>
 <a href="{% url 'ask' %}"><li class="inner" id="sidesel">Ask</li></a>
 <a href="{% url 'views.community' %}"><li class="inner">Friends</li></a>
+<a onmouseup="document.getElementById('tpfanbox').style.display='block'"><center style="float:left;cursor:pointer;"><li class="inner">Sticky</li></center></a>
+
 </ul>
 </div>
 	
@@ -37,7 +39,7 @@
 				<ul class="stick">
     {% for sticky in stickies %}
     <li>
-      <a href="#">
+      <a href="#" class="note">
         <h2>{{ sticky.writer }}</h2>
         <p>{{ sticky.message }}</p>
       </a>
@@ -49,6 +51,51 @@
            <div id=empty>
 </div> 
 </div>
+
+
+<style type="text/css">
+* html #tpfanbox{position:absolute}
+#tpfanbox{top:0px;left:0px;width:100%;height:100%;margin:0;overflow-y:auto; z-index:9999}
+#tpfanboxx{overflow:none}
+.tpfanboxx{position:fixed;top:43%;left:50%;margin-top:-150px; margin-left:-330px;height:auto;
+-webkit-border-radius: 20px;-moz-border-radius: 20px;border-radius: 20px; 
+padding:10px;
+z-index:9999;}
+
+</style>
+<div id="tpfanbox">
+<div id="tpfanboxx" class="tpfanboxx">
+<center style="margin:10px;cursor:pointer;">
+<ul class="stick">
+   <li>
+   
+    <a href="#" class="note" style="width:16em; height:16em;">
+    <form method="post" action="" enctype="multipart/form-data" >
+{% csrf_token %}
+        <h2>{{ user.first_name }}</h2>
+        <textarea style=" border:solid; width:260px; height:220px; font-size:25px;" name="sticktext" class="forms">I would like...</textarea>
+        
+        <input type="submit" value="Save" class="inner" style="border:none; background-color:transparent;font-size:12px; color:#606070; text-decoration:none;">
+         <p style="font-size:12px; color:#606070; text-decoration:none;" onmouseup="document.getElementById('tpfanbox').style.display='none'">
+cancel</p>
+</form>
+      </a>
+     
+
+      
+   </li>
+</ul>
+
+
+
+
+
+</center>
+</div>
+</div>
+<script>
+document.getElementById('tpfanbox').style.display='none';
+</script>
 
 
 <ul id=foot>

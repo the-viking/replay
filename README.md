@@ -36,3 +36,4 @@ Project to do:
 - [ ] add translation tags, can change language from admin page
 - [ ] move inline css to stylesheets
 - [ ] move common navigation elements to a base template
+- [ ] can add stickies and edit them easily using AJAX
