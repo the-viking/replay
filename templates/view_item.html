@@ -183,10 +183,9 @@ z-index:9999;}
 <center style="margin:10px;cursor:pointer;"><a style=" font-size:12px; color:#606070; text-decoration:none;" onmouseup="document.getElementById('tpfanbox').style.display='none'">
 <h3 style="position:absolute; top:0px; left:10px;">[x]</h3>
 <ul>
-<li class="pop"><strong>Name:</strong> {{ owner.get_full_name|default:"None" }}</li>
-<li class="pop"><strong>Email:</strong> {{ owner.email|default:"None" }}</li>
-<li class="pop"><strong>Phone: </strong> {{ owner.profile.telephone|default:"None" }} </li>
-<li class="pop"><strong>Address: </strong> {{ owner.profile.address|default:"None" }} </li>
+<li class="pop"><strong>Name:</strong> {{ user.get_full_name|default:"None" }}</li>
+<li class="pop"><strong>Email:</strong> {{ user.email|default:"None" }}</li>
+<li class="pop"><strong>Phone: </strong> {{ user.profile.telephone|default:"None" }} </li>
 </ul>
 <img style="border:1px solid #999999; top:25px; right:25px; position:absolute;" src="{{ MEDIA_URL }}{{ owner.profile.picture |default:"media/empty.gif" }}" width="170" height="170" /> </a>
 </center>

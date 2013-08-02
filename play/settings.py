@@ -1,4 +1,6 @@
 # Django settings for play project.
+
+# import secret key from separate file, kept out of version control for security
 from play.key import SECRET_KEY
 
 DEBUG = True

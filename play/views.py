@@ -200,11 +200,11 @@ def user(request, num):
             items = False
             yours = False
         if not yours:
-            return render(request, 'community.html', { 'user' : user, 'items' : items })
+            return render(request, 'community_friends_2.html', { 'user' : user, 'id': user.id, 'items' : items })
         else: 
             notes = Notification.objects.filter(sent_to=request.user)
             noted_items = [n.item for n in notes]
-            return render(request, 'mypage.html', { 'user' : user, 'items' : items, 'noted_items' : noted_items })
+            return render(request, 'items_mypage.html', { 'user' : user, 'items' : items, 'id': user.id, 'noted_items' : noted_items })
 
 
 def invalid(file):
