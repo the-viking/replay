@@ -149,6 +149,7 @@ INSTALLED_APPS = (
 	'sorl.thumbnail',
     'debug_toolbar',
     'dajaxice',
+    'admin_extension',
 )
 
 # A sample logging configuration. The only tangible logging

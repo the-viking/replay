@@ -7,12 +7,12 @@
 <link href="{{ STATIC_URL }}css/style.css" rel="stylesheet" type="text/css" />
 {% dajaxice_js_import %}
 
-
-
+<script type="text/javascript" src="{{ STATIC_URL }}javascript/inlineeditor.js"></script>
 </head>
 
 
 <body>
+
 <div id=container>
 <a href="{% url 'views.home' %}">
 <div id=logo>
@@ -43,9 +43,13 @@
     {% for sticky in stickies %}
     <li>
       <div class="note">
-      <a href=#><span style="font-size:10px; color:#606070; text-decoration:none; position:absolute; top:3px; left:3px;">[x]</span></a>
+	  <a href=#>
+		{% if sticky in your_stickies %}
+			  <span style="font-size:10px; color:#606070; text-decoration:none; position:absolute; top:3px; left:3px;">[x]</span>
+		{% endif %}
+	  </a>
         <h2>{{ sticky.writer.first_name }}</h2>
-        <p>{{ sticky.message }}</p>
+		<p{% if sticky in your_stickies %} class="editable"{% endif %}>{{ sticky.message }}</p>
       </div>
     </li>
     {% endfor %}
@@ -78,8 +82,8 @@ z-index:9999;}
         <h2>{{ user.first_name }}</h2>
         <textarea style="background-color:white; border:solid; width:260px; height:220px; font-size:25px;" name="sticktext" class="forms">I would like...</textarea>
         
-        <input type="submit" value="Save" class="inner" style="border:none; background-color:transparent;font-size:12px; color:#606070; text-decoration:none;">
-         <p style="font-size:12px; color:#606070; text-decoration:none;" onmouseup="document.getElementById('tpfanbox').style.display='none'">
+        <input type="submit" value="Save" class="inner"id="viewedit" style="border:none; font-size:12px; color:#606070; text-decoration:none;cursor:pointer;">
+         <p id="viewcancelstick" class="inner" onmouseup="document.getElementById('tpfanbox').style.display='none'">
 cancel</p>
 </form>
     {% if errors %}
@@ -109,8 +113,8 @@ document.getElementById('tpfanbox').style.display='none';
 
 
 <ul id=foot>
-<li style="width:7em;" class="bottom">About us</li>
-<li class="bottom">Contact</li>
+		<a href="{% url 'views.about' %}"><li style="width:7em;" class="bottom">About us</li></a>
+		<a href="{% url 'views.contact' %}"><li class="bottom">Contact</li></a>
 </ul>
 		</div>
 	</body>

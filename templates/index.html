@@ -5,6 +5,7 @@
 <title>re:play</title>
 
 <link href="{{ STATIC_URL }}css/mystyle.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="{{ STATIC_URL }}images/favicon.ico" />
 </head>
 
 <body>
@@ -33,8 +34,9 @@ PW: <br><input class="forms" type="password" name="pwd">
 </div>
 <ul id=foot>
 <li style="width:4em;" class="bottom"></li>
-<li style="width:10em;" class="bottom">About Re:Play</li>
-<li class="bottom">Contact</li>
+<a href="{% url 'views.about' %}"><li style="width:10em;" class="bottom">About Re:Play</li></a>
+<a href="{% url 'views.contact' %}"><li class="bottom">Contact</li></a>
+
 </ul>
 </body>
 </html>

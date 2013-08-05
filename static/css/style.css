@@ -105,6 +105,7 @@ text-decoration:none;
 padding:0.2em 0.6em;
 display:inline;
 font-size:.9em;
+color:black;
 }
 
 #center {
@@ -398,6 +399,19 @@ margin:0;
 list-style-type:none;
 text-align:center;
 font-size:19px;
+}
+
+#viewcancelstick {
+background-color:#FF4339;
+float:left;
+margin-top:20px;
+margin-left:5%;
+width:35%;
+text-align:center;
+font-size:12px; 
+border:none; 
+color:#606070; 
+text-decoration:none;
 }
 
 #viewcontact {

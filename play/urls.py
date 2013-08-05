@@ -1,6 +1,7 @@
 # from django.conf.urls.defaults import *
 from django.conf.urls import *
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.views.generic import TemplateView
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -22,7 +23,8 @@ urlpatterns = patterns('play.views',
     url(r'^account/$', 'account'),
     url(r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^ask/$', 'ask', name="ask"),
-
+    url(r'^about/', 'about'),
+    url(r'^contact/', 'contact'),
     # url(r'^replay/', include('replay.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

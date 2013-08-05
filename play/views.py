@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
 from exchange.models import Item, Notification
 from stickies.models import Sticky
+from admin_extension.models import Info
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 import settings
@@ -159,7 +160,7 @@ def notify(request, id):
             owner = False
             yours = False
             sent = False
-        return render(request, 'view_item.html', {'owner' : owner, 'item' : item, 'yours' : yours, 'sent' : sent })
+        return render(request, 'view_item.html', {'user' : owner, 'item' : item, 'yours' : yours, 'sent' : sent })
 
 def delete(request, id):
     """ 
@@ -353,4 +354,12 @@ def ask(request):
             if not errors:
                sticky = Sticky(writer = request.user, message = text) 
                sticky.save()
-        return render(request, 'ask.html', {'stickies' : Sticky.objects.all(), 'errors' : errors })
+        return render(request, 'ask.html', {'stickies' : Sticky.objects.all(), 'errors' : errors, 'your_stickies' : Sticky.objects.filter(writer=request.user)})
+
+def about(request):
+    text = Info.objects.get(name="about").text
+    return render(request, 'info.html', {'text' : text, 'title' : "About"})
+
+def contact(request):
+    text = Info.objects.get(name="contact").text
+    return render(request, 'info.html', {'text' : text, 'title' : "Contact" })
