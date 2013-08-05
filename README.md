@@ -2,6 +2,8 @@ replay
 ======
 A technology probe built and designed by Maria Håkansson, Erik Bonadonna and Jung-Hu Sohn, 
 out of the Information Science department at Cornell University in summer of 2013.
+Replay gives a community of users a space to give away things they don't need or want anymore
+in a simple, informal way.
 
 
 Replay is meant to explore notions of necessity and people' feelings about what things
@@ -22,15 +24,18 @@ the templates directory.
 Models are stored in a MySQL database, accessed through Django's built in
 database interface.
 
-#### Defined in *exchange*: ####
+###### Defined in *exchange*:
 * _Item_ - stores information about items on the site (who added, when, description, etc.)
 * _Notification_ - tracks notifications between users for an item, expire after a set period of time
-#### Defined in built-in *contrib.auth*: ####
+
+###### Defined in built-in *contrib.auth*: 
 * _User_ - stores passwords, names, email, etc.
-#### Defined in *admin_extension*: ####
+
+###### Defined in *admin_extension*: 
 * _Profile_ - extends the User model, storing profile pictures, phone numbers and other information as needed
 * _Info_ - stores the text of a few informational pages (about us and contact)
-#### Defined in *stickies* ####:
+
+###### Defined in *stickies* :
 * _Sticky_ - the stickies on the ask page, providing a discussion/bulletin board for things users are asking for
 
 ### Templates ###
