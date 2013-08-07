@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Account Settings</title>
+<title>Re:Play</title>
 <link href="{{ STATIC_URL }}css/style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -20,9 +20,9 @@
 
 {% if errors %}
 <ul>
-{% for error in errors %}
-<li>Error</li>
-{% endfor %}
+		{% for error in errors %}
+		<li>{{ error }}</li>
+		{% endfor %}
 </ul>
 {% endif %}
 <div style="width:800px; padding:10px;margin-left:auto; margin-right:auto;">
@@ -30,29 +30,29 @@
 <div style="width:600px; margin-top:80px; margin-right:210px;">
 
 <form method="post" action="" enctype="multipart/form-data" >
-{% csrf_token %}
-<ul id="accounts">
-<li>ID:<span id="mand">*</span><textarea class="forms"  name="name">{{user.username}}</textarea></li>
-<li>Password:<span id="mand">*</span><input class="forms" type="password" name="pwd"></li>
-<li>PW Confirm:<span id="mand">*</span><input class="forms" type="password" name="pwd_conf"></li>
-<li>Profile Picture:<input class="forms" type="file" name="image"/></li>
+		{% csrf_token %}
+		<ul id="accounts">
+		<li>ID:<span id="mand">*</span><textarea class="forms"  name="name">{{user.username}}</textarea></li>
+		<li>Password:<span id="mand">*</span><input class="forms" type="password" name="pwd"></li>
+		<li>PW Confirm:<span id="mand">*</span><input class="forms" type="password" name="pwd_conf"></li>
+		<li>Profile Picture:<input class="forms" type="file" name="image"/></li>
 
 
-</br>
+		</br>
 
 
-<li>First Name:<span id="mand">*</span><textarea name="firstname" class="forms">{{user.first_name}}</textarea>    </li> 
-<li>Last Name:<textarea name="lastname" class="forms">{{user.last_name}}</textarea>    </li> 
-<li>Email:<textarea name="email" class="forms">{{user.email}}</textarea></li>
-<li>Phone:<textarea name="phone" class="forms">{{user.profile.telephone}}</textarea></li>
-</br>
-</ul>
+		<li>First Name:<span id="mand">*</span><textarea name="firstname" class="forms">{{user.first_name}}</textarea>    </li> 
+		<li>Last Name:<textarea name="lastname" class="forms">{{user.last_name}}</textarea>    </li> 
+		<li>Email:<textarea name="email" class="forms">{{user.email}}</textarea></li>
+		<li>Phone:<textarea name="phone" class="forms">{{user.profile.telephone}}</textarea></li>
+		</br>
+		</ul>
 
-</div>
-<img style="border:1px solid #999999; float:right;" src="{{ MEDIA_URL }}{{ user.profile.picture|default:"media/empty.gif" }}" width="170" height="170" /> 
-<ul>
-<input type="submit" value="Save" class="inner" id="viewcontact" class="pop">
-<a href="javascript: history.go(-1)"><li class="inner" id="viewdelete" class="pop">Cancel</li></a>
+		</div>
+		<img style="border:1px solid #999999; float:right;" src="{{ MEDIA_URL }}{{ user.profile.picture|default:"media/empty.gif" }}" width="170" height="170" /> 
+		<ul>
+		<input type="submit" value="Save" class="inner" id="viewcontact" class="pop">
+		<a href="{% url 'views.home' %}"><li class="inner" id="viewdelete" class="pop">Cancel</li></a>
 </form>
 </ul>
 

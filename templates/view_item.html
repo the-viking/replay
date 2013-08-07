@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>{{ item.name }} </title>
+<title>Re:Play</title>
 <link href="{{ STATIC_URL }}css/style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -15,7 +15,7 @@
 <a href="{% url 'views.logout_user' %}"><p id=logout>Log Out</p></a>
 <a href="{% url 'views.account' %}"><p id="account">Account</p></a>
 <ul>
-<a href="{% url 'views.community' %}">
+<a href="{% url 'ask' %}">
 <li class="outer">Community</li></a>
 <a href="{% url 'views.home' %}"><li class="outer"id=items style="background-color:#66CCFF;">Items</li></a>
 </ul>
@@ -24,7 +24,7 @@
 <p>Items
 </p>
 <ul>
-<a href="{% url 'views.home' %}"><li class="inner" id="sidesel">Items</li></a>
+<li class="inner" id="sidesel">Items</li>
 
 <a onmouseup="document.getElementById('tpfanbox').style.display='block'"><li class="inner"><center style="float:left;cursor:pointer;">&nbsp;&nbsp;Contact</center></li></a>
 
@@ -90,8 +90,11 @@ overflow:auto;">
 </div>
 {% else %}
 <div id="main">
-{% if note %}
-<p id="notification">Notification from {{ note.sent_from }} on {{ note.date}}</p>
+{% if notes %}
+<div style="width:300px; height:70px; position:absolute; right:120px; padding-top:10px; overflow:auto;">
+{% for note in notes %}
+<p id="notification">Notification from {{ note.sent_from.first_name }} on {{ note.date}}</p>
+{% endfor %}</div>
 {% endif %}
 		<div id="viewname">A {{ item.name }} </div>
                     
@@ -164,7 +167,7 @@ Notify
 </div>
 </div>
 
-<!-- FACEBOOK LIKE BOX CSS POPUP WIDGET -->
+
 <style type="text/css">
 * html #tpfanbox{position:absolute}
 #tpfanbox{top:0px;left:0px;width:100%;height:100%;margin:0;overflow-y:auto; z-index:9999}
@@ -198,7 +201,6 @@ z-index:9999;}
 document.getElementById('tpfanbox').style.display='none';
 
 </script>
-<!-- FACEBOOK LIKE BOX CSS POPUP WIDGET -->
 
 
 <ul id=foot>

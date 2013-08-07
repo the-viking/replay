@@ -1,5 +1,6 @@
 from django.db import models
 import os
+import datetime
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 
@@ -10,9 +11,9 @@ class Item(models.Model):
     offered_by = models.ForeignKey(User)
     image = models.FileField(upload_to='media/images/%Y')
 
-    # by default, sort by date added
+    # by default, sort by reverse date added (most recently added first)
     class Meta:
-            ordering = ['offered_date']
+            ordering = ['-offered_date']
 
     def __unicode__(self):
         return self.name
@@ -20,24 +21,28 @@ class Item(models.Model):
 # indicates a notification from one user to another, requesting an item
 class Notification(models.Model):
     # foreign keys for involved users, additional names to avoid clash
-	sent_to = models.ForeignKey(User, related_name='notification_from')
-	sent_from = models.ForeignKey(User, related_name='notification_to')
-	item = models.ForeignKey(Item)
-	date = models.DateTimeField(auto_now_add=True, blank=True)
-	visible = models.BooleanField()
-    # optional field to indicate whether notification was accepted
-	accepted = models.NullBooleanField()
+    sent_to = models.ForeignKey(User, related_name='notification_from')
+    sent_from = models.ForeignKey(User, related_name='notification_to')
+    item = models.ForeignKey(Item)
+    date = models.DateTimeField(auto_now_add=True, blank=True)
+    # indicates whether the notification is still visible. use visible() method instead
+    visible = models.BooleanField()
+    # optional field to indicate whether notification was accepted (not currently being used)
+    accepted = models.NullBooleanField()
 
-	def __unicode(self):
-		return "Sent to " + self.sent_to.username + "from" + self.sent_from.username
+    def visible(self):
+        """
+        Returns a boolean for whether the notification should still be
+        visible, based on the set expiration tim
+        """
+        # set expiration time to be 7 days
+        exp_time = datetime.timedelta(5)
+        now = datetime.datetime.now(self.date.tzinfo)
+        return now - self.date < exp_time 
+
+    def __unicode(self):
+        return "Sent to " + self.sent_to.username + "from" + self.sent_from.username
 	
-# model to extend the default User model with a few other optional fields
-class Profile(models.Model):
-	user = models.OneToOneField(User)
-	picture = models.FileField(upload_to='media/profile_pictures', blank=True, null=True)
-	telephone = models.CharField(max_length=12, blank=True, null=True)
-	address = models.CharField(max_length=500, blank=True, null=True)
-
 @receiver(models.signals.post_delete, sender=Item)
 def auto_delete_file_on_delete(sender, instance, **kwargs):
     """

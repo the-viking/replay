@@ -3,15 +3,13 @@ from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
 from exchange.models import Item, Notification
 from stickies.models import Sticky
-from admin_extension.models import Info
+from admin_extension.models import Info, Profile
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from string import strip
 import settings
 from django.utils.html import strip_tags
 
-# dajax things
-from django.utils import simplejson
-from dajaxice.decorators import dajaxice_register
 
 # site url, used for redirecting to homepage
 URL = 'http://replay-project.net/'
@@ -42,9 +40,10 @@ def home(request):
             else:
                 errors.append('Wrong username or password')
     if request.user.is_authenticated():
+        # show only visible notes
         notes = Notification.objects.filter(sent_to=request.user)
-        noted_items = [n.item for n in notes]
-        page_title = 'All Items'
+        visible_notes = [n for n in notes if n.visible()] 
+        noted_items = [n.item for n in visible_notes]
         return render(request, 'all.html', { 'id' : request.user.id, 'items' : Item.objects.all(), 'noted_items': noted_items })
     else:
 	    return render(request, 'index.html', { 'errors' : errors })
@@ -86,19 +85,19 @@ def item(request, num):
     # make sure inputted id is an integer
         item = get_item(num)
         sent = False
-        note = False
+        notes = False
         if item:
             user = User.objects.get(id=item.offered_by.id)
             yours = request.user == user
             if yours:
-                notes = Notification.objects.filter(sent_to=request.user)
-                noted_items = [n.item for n in notes]
-                if item in noted_items:
-                    note = notes.get(item=item)
+                # retrieve notifications that belong to this user and refer to this item
+                notes = Notification.objects.filter(sent_to=request.user).filter(item=item)
+                # show only visible notes
+                notes = [n for n in notes if n.visible()] 
         else:
             user = False
             yours = False
-        return render(request, 'view_item.html', {'user' : user, 'item' : item, 'yours' : yours, 'sent' : sent, 'note': note })
+        return render(request, 'view_item.html', {'user' : user, 'item' : item, 'yours' : yours, 'sent' : sent, 'notes': notes })
 
 def edit(request, id):
     """
@@ -287,7 +286,11 @@ def account(request):
         changed = False
         # handle form submission
         if request.method == 'POST':
-            profile = user.profile
+            try:
+                profile = user.profile
+            except ObjectDoesNotExist:
+                profile = Profile(user = user)
+                profile.save()
             # validate image
             if 'image' in request.FILES:
                 image = request.FILES['image']
@@ -313,9 +316,11 @@ def account(request):
                 pwd = request.POST['pwd']
                 if request.POST.get('pwd_conf', ''):
                     if pwd == request.POST['pwd_conf']:
-                        user.password = pwd
+                        user.set_password(pwd)
                     else:
                         errors.append('Enter your new password again in confirmation password')
+                else:
+                    errors.append('Enter a confirmation password')
             # save the User and Profile models if no errors have been found
             if not errors:
                 user.save()
@@ -349,6 +354,8 @@ def ask(request):
                 errors.append('Enter some text for your sticky.')
             else:
                 text = request.POST['sticktext']
+                if strip(text) == "I would like...":
+                    errors.append('Enter some text for your sticky.')
                 if len(text) > 70:
                     errors.append('Your text is too long')
             if not errors:

@@ -6,6 +6,8 @@ from play.key import SECRET_KEY
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+DAJAXICE_MEDIA_PREFIX="dajaxice"
+
 # variables for home directory, url and puclic html directories
 HOME = '/home3/replaypr/'
 PUBLIC = HOME + 'public_html/'
@@ -69,7 +71,7 @@ MEDIA_URL = URL
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = ''
+STATIC_ROOT = HOME + 'public_html/static_root'
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
@@ -96,7 +98,7 @@ STATICFILES_FINDERS = (
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-     'django.template.loaders.eggs.Loader',
+    'django.template.loaders.eggs.Loader',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
