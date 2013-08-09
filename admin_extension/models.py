@@ -11,7 +11,7 @@ class Info(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User)
     picture = models.FileField(upload_to='media/profile_pictures', blank=True, null=True)
-    telephone = models.CharField(max_length=12, blank=True, null=True)
+    telephone = models.CharField(max_length=20, blank=True, null=True)
     address = models.CharField(max_length=500, blank=True, null=True)
     def __unicode__(self):
         return self.user.username

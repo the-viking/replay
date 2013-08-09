@@ -79,10 +79,30 @@ overflow:hidden;
 
 #addsubmit {
 background-color:#FFCC66;
-float:right;
-margin-right:70px;
-margin-top:-10px;
-width:300px;
+float:left;
+margin-left:8%;
+margin-top:-15px;
+width:35%;
+text-align:center;
+cursor: pointer;
+}
+
+#editsubmit {
+background-color:#FFCC66;
+float:left;
+margin-left:8%;
+margin-top:10px;
+width:35%;
+text-align:center;
+cursor: pointer;
+}
+
+#addcancel {
+background-color:#FF3333;
+float:left;
+margin-left:8%;
+margin-top:10px;
+width:35%;
 text-align:center;
 cursor: pointer;
 }
@@ -287,6 +307,7 @@ line-height:2.5em;
 vertical-align:middle;
 margin-left:1em;
 z-index:9999;
+position:static;
 }
 
 .item {
@@ -407,7 +428,7 @@ line-height:170%
 float:left;
 width:150px;
 height:100px;
-position: absolute;
+position: fixed;
 }
 
 #sidesel {

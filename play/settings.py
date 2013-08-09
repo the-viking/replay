@@ -6,8 +6,6 @@ from play.key import SECRET_KEY
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-DAJAXICE_MEDIA_PREFIX="dajaxice"
-
 # variables for home directory, url and puclic html directories
 HOME = '/home3/replaypr/'
 PUBLIC = HOME + 'public_html/'
@@ -60,7 +58,8 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = PUBLIC
+
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://example.com/media/", "http://media.example.com/"
@@ -148,11 +147,14 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
 	'exchange',
     'stickies',
-	'sorl.thumbnail',
     'debug_toolbar',
-    'dajaxice',
     'admin_extension',
+    'imageservice',
+    'south',
 )
+RESIZE_MAX_WIDTH = 400
+
+RESIZE_MAX_HEIGHT = 400
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

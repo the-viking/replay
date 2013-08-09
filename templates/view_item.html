@@ -4,6 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Re:Play</title>
 <link href="{{ STATIC_URL }}css/style.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="{{ STATIC_URL }}images/favicon.ico" />
 </head>
 
 <body>
@@ -14,6 +15,7 @@
 </a>
 <a href="{% url 'views.logout_user' %}"><p id=logout>Log Out</p></a>
 <a href="{% url 'views.account' %}"><p id="account">Account</p></a>
+{% if yours %}
 <ul>
 <a href="{% url 'ask' %}">
 <li class="outer">Community</li></a>
@@ -21,10 +23,11 @@
 </ul>
 <div id=center>
 <div id=sidemenu>
-<p>Items
+<p>
+{{ user.first_name }}
 </p>
 <ul>
-<li class="inner" id="sidesel">Items</li>
+<a href="{% url 'views.home' %}"><li class="inner" id="sidesel">Items</li></a>
 
 <a onmouseup="document.getElementById('tpfanbox').style.display='block'"><li class="inner"><center style="float:left;cursor:pointer;">&nbsp;&nbsp;Contact</center></li></a>
 
@@ -33,7 +36,28 @@
 </a>
 </ul>
 </div>
+{% else %}
+<ul>
+<a href="{% url 'ask' %}">
+<li class="outer"style="background-color:#66CCFF;">Community</li></a>
+<a href="{% url 'views.home' %}"><li class="outer"id="items">Items</li></a>
+</ul>
+<div id=center>
+<div id=sidemenu>
+<p>
+{{ user.first_name }}
+</p>
+<ul>
+ <a href="{% url 'views.user' user.id %}"><li class="inner" id="sidesel">Items</li></a>
 
+<a onmouseup="document.getElementById('tpfanbox').style.display='block'"><li class="inner"><center style="float:left;cursor:pointer;">&nbsp;&nbsp;Contact</center></li></a>
+
+<a href="javascript: history.go(-1)">
+<li class="inner">Back</li>
+</a>
+</ul>
+</div>
+{% endif %}
 
 {% if errors %}
 <ul>
@@ -82,11 +106,20 @@ border:none;
 overflow:auto;">
 {{ item.description }}
 </textarea>
+
                   </fieldset>
-				<br/>
-			
-				<input type="submit" value="Submit" class="inner" id="addsubmit">
+<ul>
+<a href="javascript: history.go(-1)">
+<li class="inner" id="addcancel">
+Cancel
+</li>
+</a>
+
+<li>
+<input type="submit" value="Submit" class="inner" id="editsubmit">
 			<form/>
+</li>
+</ul>		
 </div>
 {% else %}
 <div id="main">

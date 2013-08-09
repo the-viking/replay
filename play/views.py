@@ -42,7 +42,7 @@ def home(request):
     if request.user.is_authenticated():
         # show only visible notes
         notes = Notification.objects.filter(sent_to=request.user)
-        visible_notes = [n for n in notes if n.visible()] 
+        visible_notes = [n for n in notes if n.appears()] 
         noted_items = [n.item for n in visible_notes]
         return render(request, 'all.html', { 'id' : request.user.id, 'items' : Item.objects.all(), 'noted_items': noted_items })
     else:
@@ -93,7 +93,7 @@ def item(request, num):
                 # retrieve notifications that belong to this user and refer to this item
                 notes = Notification.objects.filter(sent_to=request.user).filter(item=item)
                 # show only visible notes
-                notes = [n for n in notes if n.visible()] 
+                notes = [n for n in notes if n.appears()] 
         else:
             user = False
             yours = False
@@ -152,7 +152,8 @@ def notify(request, id):
         if item:
             owner= User.objects.get(id=item.offered_by.id)
             yours = request.user == owner
-            note = Notification(sent_to = owner, sent_from = request.user, item = item, visible = True)
+            visible = True
+            note = Notification(sent_to = owner, sent_from = request.user, item = item, visible = visible)
             note.save()
             sent = True
         else:
@@ -355,6 +356,8 @@ def ask(request):
             else:
                 text = request.POST['sticktext']
                 if strip(text) == "I would like...":
+                    errors.append('Enter some text for your sticky.')
+                if strip(text) == "I'm looking for...":
                     errors.append('Enter some text for your sticky.')
                 if len(text) > 70:
                     errors.append('Your text is too long')

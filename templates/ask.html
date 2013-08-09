@@ -1,19 +1,26 @@
-{% load dajaxice_templatetags %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Re:Play</title>
 <link href="{{ STATIC_URL }}css/style.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="{{ STATIC_URL }}images/favicon.ico" />
 
 <script type="text/javascript" src="{{ STATIC_URL }}javascript/inlineeditor.js"></script>
 <script type="text/javascript">
 </script>
-{% dajaxice_js_import %}
+
+<script>
+		var mess = new Array();
+		mess[0] = "I would like..."
+		mess[1] = "I'm looking for..."
+		function myFunction() {
+		document.getElementById("demo").innerHTML=mess[Math.floor(Math.random()*2)];}
+</script>
 </head>
 
 
-<body>
+<body onload="myFunction()">
 <div id=container>
 
 <a href="{% url 'views.home' %}">
@@ -60,7 +67,7 @@
         <h2>{{ sticky.writer.first_name }}</h2>
 		<p{% if sticky in your_stickies %} class="editable"{% endif %}>{{ sticky.message }}</p>
        {% if sticky in your_stickies %}<form method="post" action="" enctype="multipart/form-data" >
-{% csrf_token %} <input type="submit" value="Save" class="inner"id="viewedit" style="position:absolute; bottom:0px; right:8px; border:none; font-size:12px; color:#606070; text-decoration:none;cursor:pointer;"></form>{% endif %}
+{% csrf_token %} <input type="submit" value="Update" class="inner"id="viewedit" style="position:absolute; bottom:0px; right:8px; border:none; font-size:12px; color:#606070; text-decoration:none;cursor:pointer;"></form>{% endif %}
       </div>
     </li>
     {% endfor %}
@@ -91,7 +98,7 @@ z-index:9999;}
     <form method="post" action="">
 {% csrf_token %}
         <h2>{{ user.first_name }}</h2>
-        <textarea style="background-color:white; border:solid; width:260px; height:220px; font-size:25px;" name="sticktext" class="forms">I would like...</textarea>
+        <textarea style="background-color:white; border:solid; width:260px; height:220px; font-size:25px;" name="sticktext" class="forms" id="demo">I would like...</textarea>
         
         <input type="submit" value="Save" class="inner"id="viewedit" style="border:none; font-size:12px; color:#606070; text-decoration:none;cursor:pointer;">
          <p id="viewcancelstick" class="inner" onmouseup="document.getElementById('tpfanbox').style.display='none'">
@@ -124,31 +131,3 @@ document.getElementById('tpfanbox').style.display='none';
 		</div>
 	</body>
 </html>
-
-
-
-
-
-
-
-
-	
-		
-                
-
-
-
-
-
-                 
-                 
-       
-
-
-                        
-
-
-
-
-
- 

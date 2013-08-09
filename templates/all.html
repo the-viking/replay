@@ -6,7 +6,6 @@
 
 {% block content %}
 <div id=list>
-
     {% for item in items %}
     <a href="{% url 'views.item' item.id %}">
         <div class="item"{% if item in noted_items %}style="border:3px solid #F50F1A; width:106px; height:124px;"{% endif %}>

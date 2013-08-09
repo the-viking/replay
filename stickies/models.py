@@ -10,3 +10,7 @@ class Sticky(models.Model):
     writer = models.ForeignKey(User)
     message = models.CharField(max_length=75)
     date = models.DateTimeField(auto_now_add=True, blank=True)
+
+    # by default, sort by reverse date added (most recently added first)
+    class Meta:
+        ordering = ['-date']

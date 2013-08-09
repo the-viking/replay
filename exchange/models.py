@@ -30,7 +30,7 @@ class Notification(models.Model):
     # optional field to indicate whether notification was accepted (not currently being used)
     accepted = models.NullBooleanField()
 
-    def visible(self):
+    def appears(self):
         """
         Returns a boolean for whether the notification should still be
         visible, based on the set expiration tim
@@ -43,6 +43,9 @@ class Notification(models.Model):
     def __unicode(self):
         return "Sent to " + self.sent_to.username + "from" + self.sent_from.username
 	
+class Pic(models.Model):
+    image = models.ImageField(upload_to='media/pics')
+
 @receiver(models.signals.post_delete, sender=Item)
 def auto_delete_file_on_delete(sender, instance, **kwargs):
     """
