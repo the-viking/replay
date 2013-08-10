@@ -40,11 +40,14 @@ def home(request):
             else:
                 errors.append('Wrong username or password')
     if request.user.is_authenticated():
-        # show only visible notes
+        # show only Notifications that should appear
         notes = Notification.objects.filter(sent_to=request.user)
         visible_notes = [n for n in notes if n.appears()] 
+        # return list of items with Notifications associated with them
         noted_items = [n.item for n in visible_notes]
-        return render(request, 'all.html', { 'id' : request.user.id, 'items' : Item.objects.all(), 'noted_items': noted_items })
+        # show only items that haven't been deleted
+        items = [i for i in Item.objects.all() if not i.deleted]
+        return render(request, 'all.html', { 'id' : request.user.id, 'items' : items, 'noted_items': noted_items })
     else:
 	    return render(request, 'index.html', { 'errors' : errors })
 
@@ -175,7 +178,8 @@ def delete(request, id):
         item = get_item(id)
         if(item):
             if request.user == item.offered_by:
-                Item.delete(item)
+                item.deleted = True
+                item.save()
                 msg = item.name + " deleted succesfully!"
     return render(request, 'items_mypage.html', { 'msg' : msg, 'deleted' : True })
 
@@ -366,6 +370,7 @@ def ask(request):
                sticky.save()
         return render(request, 'ask.html', {'stickies' : Sticky.objects.all(), 'errors' : errors, 'your_stickies' : Sticky.objects.filter(writer=request.user)})
 
+# views for flatpages, pulled from the Info model
 def about(request):
     text = Info.objects.get(name="about").text
     return render(request, 'info.html', {'text' : text, 'title' : "About"})

@@ -147,14 +147,10 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
 	'exchange',
     'stickies',
-    'debug_toolbar',
     'admin_extension',
-    'imageservice',
     'south',
+    'debug_toolbar',
 )
-RESIZE_MAX_WIDTH = 400
-
-RESIZE_MAX_HEIGHT = 400
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

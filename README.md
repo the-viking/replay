@@ -25,18 +25,24 @@ Models are stored in a MySQL database, accessed through Django's built in
 database interface.
 
 ###### Defined in *exchange*:
-* _Item_ - stores information about items on the site (who added, when, description, etc.)
-* _Notification_ - tracks notifications between users for an item, expire after a set period of time
+* _Item_ - stores information about items on the site (who added, when, description, etc.). When these
+are "deleted" from the main site, they remain in the database, but the boolean field "deleted" is set to 
+false, and they won't show up on the list of all items (except in the admin page)
+* _Notification_ - tracks notifications between users for an item, expire after a set period of time (currently 5 days, defined in exchange/models.py
 
 ###### Defined in built-in *contrib.auth*: 
-* _User_ - stores passwords, names, email, etc.
+* _User_ - stores passwords (as hashcodes), names, email, etc.
 
 ###### Defined in *admin_extension*: 
 * _Profile_ - extends the User model, storing profile pictures, phone numbers and other information as needed
 * _Info_ - stores the text of a few informational pages (about us and contact)
 
 ###### Defined in *stickies* :
-* _Sticky_ - the stickies on the ask page, providing a discussion/bulletin board for things users are asking for
+* _Sticky_ - the stickies on the ask page, providing a discussion/bulletin board for things users are asking for.
+As with Items, a user without staff priveleges cannot actually delete these from the database, only change their deleted field to False. 
+
+The models for exchange, admin-extension and stickies are tracked through South, a Django app to assist
+with database modifications and migrations. 
 
 ### Templates ###
 Most of the templates are extensions of either base_items.html
@@ -50,7 +56,7 @@ here for easy access and version control and symlinked to the public_html
 directory of the server, where django serves them from.User added images are 
 stored in the media directory of public_html, but aren't tracked here.
 These files are linked to in the templates with {{ STATIC_URL }}
-and {{ MEDIA_URL }}
+and {{ MEDIA_URL }}.
 
 Files used for server deplyment on a shared fcgi hosting environment
 are backed up in the server directory.
@@ -63,10 +69,11 @@ Project to do:
 - [x] notifications can be sent to indicate interest in an item
 - [ ] update display of models in admin page
 - [ ] add translation tags, can change language from admin page
-- [ ] move inline css to stylesheets
+- [x] move inline css to stylesheets
 - [x] move common navigation elements to a base template
-- [ ] can add stickies
-- [ ] stickies save upon leaving the text area
-- [ ] image thumbnail function
-- [ ] notifications expire after a deadline (3 days?)
-- [ ] info pages (about, contact) editable from admin interface
+- [x] can add stickies
+- [ ] stickies save upon leaving the text area (or clicking update)
+- [ ] image thumbnail function (may be too difficult on shared hosting)
+- [x] notifications expire after a deadline (5 days)
+- [x] info pages (about, contact) editable from admin interface
+- [ ] change display of notifications to be more visible and have no scrollbar

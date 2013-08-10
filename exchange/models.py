@@ -10,6 +10,7 @@ class Item(models.Model):
     description = models.CharField(max_length=500)  
     offered_by = models.ForeignKey(User)
     image = models.FileField(upload_to='media/images/%Y')
+    deleted = models.BooleanField(default=False)
 
     # by default, sort by reverse date added (most recently added first)
     class Meta:
@@ -33,9 +34,9 @@ class Notification(models.Model):
     def appears(self):
         """
         Returns a boolean for whether the notification should still be
-        visible, based on the set expiration tim
+        visible, based on the set expiration time
         """
-        # set expiration time to be 7 days
+        # set expiration time to be 5 days
         exp_time = datetime.timedelta(5)
         now = datetime.datetime.now(self.date.tzinfo)
         return now - self.date < exp_time 

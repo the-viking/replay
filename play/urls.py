@@ -9,9 +9,6 @@ from django.conf.urls.static import static
 from django.contrib import admin
 admin.autodiscover()
 
-from dajaxice.core import dajaxice_autodiscover, dajaxice_config
-dajaxice_autodiscover()
-
 urlpatterns = patterns('play.views',
     url(r'^$', 'home'),
     url(r'^user/(\d+)/', 'user'),
@@ -27,7 +24,6 @@ urlpatterns = patterns('play.views',
     url(r'^ask/$', 'ask', name="ask"),
     url(r'^about/', 'about'),
     url(r'^contact/', 'contact'),
-    url(dajaxice_config.dajaxice_url, include('dajaxice.urls')),
     # url(r'^replay/', include('replay.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
