@@ -45,7 +45,7 @@ def home(request):
         visible_notes = [n for n in notes if n.appears()] 
         # return list of items with Notifications associated with them
         noted_items = [n.item for n in visible_notes]
-        # show only items that haven't been deleted
+        # filter out deleted items
         items = [i for i in Item.objects.all() if not i.deleted]
         return render(request, 'all.html', { 'id' : request.user.id, 'items' : items, 'noted_items': noted_items })
     else:
@@ -119,6 +119,7 @@ def edit(request, id):
             owner= User.objects.get(id=item.offered_by.id)
             yours = request.user == owner
             if request.method == 'POST':
+                # ensure inputted text is within length limits
                 if len(request.POST['name']) > 40:
                     errors.append("Please enter a shorter name")
                 else:
@@ -129,6 +130,7 @@ def edit(request, id):
                     item.description = strip_tags(request.POST['desc'])
                 if 'image' in request.FILES:
                     file = request.FILES['image']
+                    # make sure that the file has an image-associated ending and is < 4.5 mb
                     errors = errors + invalid(file)
                     if not errors:
                         item.image = file
@@ -168,8 +170,9 @@ def notify(request, id):
 def delete(request, id):
     """ 
     if the user owns the item,
-    deletes it from the database
-    and the image from the filesystem
+    changes the deleted attribute
+    to true, making it not appear
+    in item listings on the site
     """
     if not request.user.is_authenticated():
         return HttpResponseRedirect(URL)
@@ -198,6 +201,7 @@ def user(request, num):
             raise Http404()
         try:
             user = User.objects.get(id=id)
+            # filter out deleted items
             items = [i for i in Item.objects.filter(offered_by_id=num) if not i.deleted]
             yours = request.user.id == user.id
         except ObjectDoesNotExist:
@@ -208,7 +212,9 @@ def user(request, num):
             return render(request, 'community_friends_2.html', { 'user' : user, 'id': user.id, 'items' : items })
         else: 
             notes = Notification.objects.filter(sent_to=request.user)
+            # filter out expired notifications
             visible_notes = [n for n in notes if n.appears()] 
+            # return a list of items with Notifications associated with them
             noted_items = [n.item for n in visible_notes]
             return render(request, 'items_mypage.html', { 'user' : user, 'items' : items, 'id': user.id, 'noted_items' : noted_items })
 
@@ -272,6 +278,8 @@ def logout_user(request):
     """
     calls the built-in logout
     function to log out a user
+    and redirects them to the 
+    homepage
     """
     logout(request)
     return HttpResponseRedirect(URL) 
@@ -355,8 +363,10 @@ def ask(request, id=False):
     else:
         errors = []
         text = False
+        # if a sticky id is passed to the view, delete it if the user is the owner
         if id:
             sticky = Sticky.objects.get(id=id)
+            # check that the user owns this sticky
             if request.user ==  sticky.writer:
                 sticky.deleted = True
                 sticky.save()
@@ -374,6 +384,7 @@ def ask(request, id=False):
             if not errors:
                sticky = Sticky(writer = request.user, message = text) 
                sticky.save()
+        # filter out all deleted stickies
         stickies = [n for n in Sticky.objects.all() if not n.deleted] 
         return render(request, 'ask.html', {'stickies' : stickies, 'errors' : errors, 'your_stickies' : Sticky.objects.filter(writer=request.user)})
 

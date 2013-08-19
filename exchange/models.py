@@ -44,8 +44,6 @@ class Notification(models.Model):
     def __unicode(self):
         return "Sent to " + self.sent_to.username + "from" + self.sent_from.username
 	
-class Pic(models.Model):
-    image = models.ImageField(upload_to='media/pics')
 
 @receiver(models.signals.post_delete, sender=Item)
 def auto_delete_file_on_delete(sender, instance, **kwargs):
