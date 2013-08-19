@@ -22,6 +22,7 @@ urlpatterns = patterns('play.views',
     url(r'^account/$', 'account'),
     url(r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^ask/$', 'ask', name="ask"),
+    url(r'^ask/(\d+)/', 'ask', name="ask"),
     url(r'^about/', 'about'),
     url(r'^contact/', 'contact'),
     # url(r'^replay/', include('replay.foo.urls')),
@@ -32,5 +33,7 @@ urlpatterns = patterns('play.views',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 )
+
+
 urlpatterns += staticfiles_urlpatterns()
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

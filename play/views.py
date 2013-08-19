@@ -198,7 +198,7 @@ def user(request, num):
             raise Http404()
         try:
             user = User.objects.get(id=id)
-            items = Item.objects.filter(offered_by_id=num)
+            items = [i for i in Item.objects.filter(offered_by_id=num) if not i.deleted]
             yours = request.user.id == user.id
         except ObjectDoesNotExist:
             user = False
@@ -208,7 +208,8 @@ def user(request, num):
             return render(request, 'community_friends_2.html', { 'user' : user, 'id': user.id, 'items' : items })
         else: 
             notes = Notification.objects.filter(sent_to=request.user)
-            noted_items = [n.item for n in notes]
+            visible_notes = [n for n in notes if n.appears()] 
+            noted_items = [n.item for n in visible_notes]
             return render(request, 'items_mypage.html', { 'user' : user, 'items' : items, 'id': user.id, 'noted_items' : noted_items })
 
 
@@ -221,9 +222,9 @@ def invalid(file):
     file_type = file.content_type.split('/')[0]
     # check file type and size against parameters in settings file
     if file_type not in settings.TASK_UPLOAD_FILE_TYPES:
-        errors.append('File type is not supported.')
+        errors.append('File type is not supported (try uploading a jpg, png, or gif file)')
     if file._size > settings.TASK_UPLOAD_FILE_MAX_SIZE:
-        errors.append('Your image is too big.')
+        errors.append('Your image is too big (max 4.5mb)')
     return errors
 
 def add(request):
@@ -248,13 +249,13 @@ def add(request):
             else:
                 name = strip_tags(request.POST['name'])
                 if len(name) > 40:
-                    errors.append('Enter a shorter name')
+                    errors.append('Enter a shorter name (max 40 characters)')
             if not request.POST.get('desc', ''):
                 errors.append('Enter a description.')
             else:
                 desc = strip_tags(request.POST['desc'])
                 if len(desc) > 500:
-                    errors.append('Enter a shorter description')
+                    errors.append('Enter a shorter description (max 500 characters)')
             if 'image' not in request.FILES:
                 errors.append('Please submit an image')
             else:
@@ -343,7 +344,7 @@ def community(request):
     else:
         return render(request, 'community.html', {'users' : User.objects.all() })
 
-def ask(request):
+def ask(request, id=False):
     """
     Displays all stickies,
     allows users to edit
@@ -354,6 +355,11 @@ def ask(request):
     else:
         errors = []
         text = False
+        if id:
+            sticky = Sticky.objects.get(id=id)
+            if request.user ==  sticky.writer:
+                sticky.deleted = True
+                sticky.save()
         if request.method == 'POST':
             if not request.POST.get('sticktext', ''):
                 errors.append('Enter some text for your sticky.')
@@ -364,11 +370,12 @@ def ask(request):
                 if strip(text) == "I'm looking for...":
                     errors.append('Enter some text for your sticky.')
                 if len(text) > 70:
-                    errors.append('Your text is too long')
+                    errors.append('Your text is too long (max 70 characters)')
             if not errors:
                sticky = Sticky(writer = request.user, message = text) 
                sticky.save()
-        return render(request, 'ask.html', {'stickies' : Sticky.objects.all(), 'errors' : errors, 'your_stickies' : Sticky.objects.filter(writer=request.user)})
+        stickies = [n for n in Sticky.objects.all() if not n.deleted] 
+        return render(request, 'ask.html', {'stickies' : stickies, 'errors' : errors, 'your_stickies' : Sticky.objects.filter(writer=request.user)})
 
 # views for flatpages, pulled from the Info model
 def about(request):

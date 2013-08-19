@@ -69,9 +69,9 @@
 {% if item %}
 {% if edited and not errors %}
             <div id="main">
-				<p style="width:70%; margin-left:60px; font-size:26px;"> <a href="{% url 'views.item' item.id %}">Item {{ item.id }}</a> edited succesfully!</p>
-                <img src="{{ STATIC_URL}}images/snakeitem.gif" style="margin-left:100px;" width="300px" height="auto" />
-                </div>
+				<p style="width:70%; margin-left:60px; font-size:26px;"> <a href="{% url 'views.item' item.id %}">{{ item.name }}</a> edited succesfully!</p>
+                <img src="{{ STATIC_URL}}images/snakeitem.gif" style="margin-left:100px;" width="300px" height="300px" />
+  </div>
                 
 {% else %}
 
@@ -107,7 +107,7 @@ overflow:auto;">
 {{ item.description }}
 </textarea>
 
-                  </fieldset>
+    </fieldset>
 <ul>
 <a href="javascript: history.go(-1)">
 <li class="inner" id="addcancel">
@@ -117,29 +117,43 @@ Cancel
 
 <li>
 <input type="submit" value="Submit" class="inner" id="editsubmit">
-			<form/>
+	<form/>
 </li>
 </ul>		
 </div>
 {% else %}
 <div id="main">
-{% if notes %}
-<div style="width:300px; height:70px; position:absolute; right:120px; padding-top:10px; overflow:auto;">
-{% for note in notes %}
-<p id="notification">Notification from {{ note.sent_from.first_name }} on {{ note.date}}</p>
-{% endfor %}</div>
-{% endif %}
-		<div id="viewname">A {{ item.name }} </div>
+
+		<div id="viewname">{{ item.name }} </div>
                     
 <div id="viewimage">
   <img src="{{ MEDIA_URL }}{{ item.image }}" width="200" height="200" /></div>
-		<div id="viewdesc"> {{ item.description }} 
+		
+        {% if notes %}
+        <div id="viewdesc" style="margin-right:250px;">
+        {% else %}
+        <div id="viewdesc">
+        {% endif %}
+         {{ item.description }} 
 
 {% if sent %}
 <p>{{ user.first_name }} notified succesfully!</p>
 {% endif %}
 
 </div>
+
+
+{% if notes %}
+<div style="position:absolute; right:430px; top:200px;">
+<div style="width:300px; height:200px; position:absolute; padding-top:10px; overflow:auto;">
+
+{% for note in notes %}
+<p id="notification">{{ note.sent_from.first_name }} is interested in {{ item.name}} ({{ note.date.date}})
+</p>
+{% endfor %}</div>
+</div>
+{% endif %}
+
 
 <div id="viewowner"> 
 {% if yours %}

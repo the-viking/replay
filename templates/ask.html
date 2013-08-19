@@ -37,7 +37,7 @@
 </ul>
 <div id=center>
 <div id=sidemenu>
-<p>Friends</p>
+<p>Ask</p>
 <ul>
 <a href="{% url 'ask' %}"><li class="inner" id="sidesel">Ask</li></a>
 <a href="{% url 'views.community' %}"><li class="inner">Friends</li></a>
@@ -59,7 +59,7 @@
     {% for sticky in stickies %}
     <li>
       <div class="note">
-	  <a href=#>
+			  <a href={% url 'ask' sticky.id %}>
 		{% if sticky in your_stickies %}
 			  <span style="font-size:10px; color:#606070; text-decoration:none; position:absolute; top:3px; left:3px;">[x]</span>
 		{% endif %}

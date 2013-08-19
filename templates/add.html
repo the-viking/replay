@@ -38,6 +38,8 @@
             overflow:auto;">{% if desc %}{{ desc }}{% endif %}</textarea>
               </fieldset>
             <br/>
+            
+            
             <input type="submit" value="Submit" class="inner" id="addsubmit">
             {% if errors %}
                 <ul style="margin-top:-20px; color:red;">
@@ -56,8 +58,8 @@
 
 {% if not form and not errors %}
     <div id="main">
-        <p style="width:70%; margin-left:60px; font-size:26px;"> <a href="{% url 'views.item' item.id %}">Item {{ item.id }}</a> added succesfully!</p>
-        <img src="{{ STATIC_URL}}images/snakeitem.gif" style="margin-left:100px;" width="300px" height="auto" />
+        <p style="width:70%; margin-left:60px; font-size:26px;"> <a href="{% url 'views.item' item.id %}">{{ item.name }}</a> added succesfully!</p>
+        <img src="{{ STATIC_URL}}images/snakeitem.gif" style="margin-left:100px;" width="300" height="300" />
     </div>
 {% endif %}
 
